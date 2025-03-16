@@ -44,4 +44,8 @@ class UsersFiles(models.Model):
         self.size = self.file.size
         return super().save(*args, **kwargs)
     
+    class Meta:
+        verbose_name = 'Файл пользователя'
+        verbose_name_plural = 'Файлы пользователей'
+    
     
