@@ -1,26 +1,31 @@
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authtoken.models import Token
+import logging
 
 class TokenAndCsrfAuthentication(BaseAuthentication):
     def authenticate(self, request):
-        if request.path in ['/api/user/login/'] and request.method == 'GET' or request.method == 'POST':
+        if request.path in ['/api/user/login/', '/api/user/registration/'] and request.method in ['GET', 'POST']:
             return None
+        
+        cookie_token = request.COOKIES.get('a_t')
+
+        if not cookie_token:
+            logging.warning('Аутентификация провалена: Отсутствует запрошенный токен')
+            raise AuthenticationFailed('Отсутствует запрошенный токен')
+        
         csrf = request.COOKIES.get('csrftoken')
         if not csrf:
+            logging.warning('Аутентификация провалена: Отсутствует csrf токен')
             raise AuthenticationFailed('Отсутствует csrf токен')
-
-        token = request.META.get('HTTP_AUTHORIZATION')
-        if (not token or not token.startswith('Token ')) or token:
-            token = request.COOKIES.get('a_t')
-
-        if not token:
-            raise AuthenticationFailed('Отсутсвует запрошенный токен')
-
-        token_key = token.split(' ')[1]
+        
         try:
-            token = Token.objects.get(key=token_key)
+            token = Token.objects.select_related('user').get(key=cookie_token)
         except Token.DoesNotExist:
-            raise AuthenticationFailed('Такого токена не существует')
-
+            logging.warning('Аутентификация провалена: Токен и пользователь не совпадают')
+            raise AuthenticationFailed('Токен и пользователь не совпадают')
+        
+        if not token.user.is_authenticated:
+            logging.warning('Аутентификация провалена: Вы не вошли в свой аккаунт')
+            raise AuthenticationFailed('Вы не вошли в свой аккаунт')
         return (token.user, token)

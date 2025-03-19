@@ -1,6 +1,6 @@
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import AllowAny, IsAdminUser
+from django.contrib.auth import login, logout
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from .permissions import AdminOrSelf
 from .models import Users
 from .serializer import UserSerializer, AdminSerializer
@@ -9,7 +9,6 @@ from rest_framework.authtoken.models import Token
 from django.middleware.csrf import get_token
 from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Q
 
 class UserView(ModelViewSet):
     queryset = Users.objects.all()
@@ -32,12 +31,10 @@ class UserView(ModelViewSet):
 class UserLoginView(ModelViewSet):
     queryset = Users.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
     
     def user_authenticate(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
-
         user = authenticate(request, username=username, password=password)
         if user is not None:
             token = Token.objects.get_or_create(user=user)
@@ -48,26 +45,31 @@ class UserLoginView(ModelViewSet):
                 'user': {'username': user.username},
                 'message': 'Вы успешно вошли в аккаунт'
             }, status=status.HTTP_200_OK)
-
-            response.set_cookie(key='a_t', value=token.key, httponly=True, secure=True)
+            login(request, user)
+            response.set_cookie(key='a_t', value=token[0].key, httponly=True)
 
             return response
         else:
             return Response({'error': 'Такого пользователя не существует'}, status=status.HTTP_403_FORBIDDEN)
         
-    def user_registration(self, request, *args, **kwargs):        
+    def user_registration(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         new_user = serializer.save()
 
         token = Token.objects.create(user=new_user)
-        get_token(request)
 
-        response = Response({
-            'user': {'username': serializer.data['username']},
-            'message': 'Вы зарегистрировали аккаунт'
+        return Response({
+            'message': 'Вы успешно зарегистрировали аккаунт'
         }, status=status.HTTP_201_CREATED)
 
-        response.set_cookie(key='a_t', value=token.key, httponly=True, secure=True)
-
-        return response
+    def user_logout(self, request, *args, **kwargs):
+        user_token = Token.objects.filter(key=request.COOKIES.get('a_t'))
+        if user_token.exists():
+            user_token.delete()
+            response = Response({'Вы успешно вышли из аккаунта'}, status=status.HTTP_204_NO_CONTENT)
+            response.delete_cookie('a_t')
+            response.delete_cookie('csrftoken')
+            logout(request)
+            return response
+        return Response({'error': 'Не валидный токен'}, status=status.HTTP_403_FORBIDDEN)
