@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from django.http import FileResponse
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import UsersFiles
 from .serializer import UsersFilesSerializer
 from .permissions import IsAdminOrOwner
@@ -27,7 +26,7 @@ class FileView(ModelViewSet):
             user_files = UsersFiles.objects.all()
         else:
             user_files = request.user.files.all()
-        serializer = self.get_serializer(user_files, many=True)
+        serializer = self.serializer_class(user_files, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def partial_update(self, request, pk=None, *args, **kwargs):

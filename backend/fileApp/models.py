@@ -1,26 +1,43 @@
+import shutil
 from django.conf import settings
 from django.db import models
+
 import os
 
+from rest_framework.serializers import ValidationError
+from folderApp.models import UsersFolders
+
 def customDir(instance, filename):
-    renamed_file_name, new_file_path = renamer(instance.user, filename)
+    renamed_file_name, new_file_path = renamer(instance.user, filename, instance.folder)
     instance.file_name = renamed_file_name
     instance.extensions = renamed_file_name.split('.')[-1]
     return new_file_path
 
-def renamer(user, filename):
+def renamer(user, filename, folder=None):
     file_name, file_ext = filename.split('.')
     copyed_file_name = file_name
     counter = 1
-    while user.files.filter(file_name=f'{copyed_file_name}.{file_ext}').exists():
+    while user.files.filter(file_name=f'{copyed_file_name}.{file_ext}', folder=folder).exists():
         copyed_file_name = f'{file_name}_{counter}'
         counter += 1
-    file_path = f'{user}/{copyed_file_name}.{file_ext}'
+    if folder is not None:
+       folders = ''
+       while folder is not None:
+            folders = f'{folder.folder_name}/{folders}'
+            if folder.parent_folder is not None:
+                folder = folder.parent_folder
+            else: 
+                break
+           
+       file_path = f'{user}/{folders}/{copyed_file_name}.{file_ext}'
+    else: 
+        file_path = f'{user}/{copyed_file_name}.{file_ext}'
     return f'{copyed_file_name}.{file_ext}', file_path
 
 class UsersFiles(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='files', verbose_name='Пользователь')
     file = models.FileField(upload_to=customDir, verbose_name='Файл')
+    folder = models.ForeignKey(UsersFolders, blank=True, null=True, on_delete=models.CASCADE, related_name='files', verbose_name='Папка')
     file_name = models.CharField(max_length=50, blank=True, verbose_name='Название файла')
     size = models.IntegerField(verbose_name='Размер файла')
     extensions = models.CharField(max_length=10, blank=True, verbose_name='Расширения файла')
@@ -47,5 +64,3 @@ class UsersFiles(models.Model):
     class Meta:
         verbose_name = 'Файл пользователя'
         verbose_name_plural = 'Файлы пользователей'
-    
-    
