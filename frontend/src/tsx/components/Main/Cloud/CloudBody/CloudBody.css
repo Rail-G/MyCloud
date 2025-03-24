@@ -1,0 +1,6 @@
+/* tailwindcss */
+@import 'tailwindcss';
+
+.file-img-text {
+    @apply absolute w-28.5 rounded p-2 bg-(--color-file) top-12 left-3.5 text-center text-white text-xl font-bold
+}

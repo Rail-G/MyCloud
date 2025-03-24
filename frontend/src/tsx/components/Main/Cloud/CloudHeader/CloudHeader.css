@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+.head-btn {
+    @apply transition-all duration-300 flex items-center gap-2 p-2 rounded hover:bg-(--color-haze-600) hover:text-white border cursor-pointer
+}
