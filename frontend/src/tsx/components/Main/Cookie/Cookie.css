@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+.cookie-section {
+    @apply bg-(--color-haze-600) font-(family-name:--font-roboto) py-2 text-base fixed bottom-[6%] left-100 right-100 rounded
+}
+
+.cookie-btn {
+    @apply rounded-xl bg-orange-300 text-white px-5 cursor-pointer hover:bg-(--color-haze-600)
+}
