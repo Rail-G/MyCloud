@@ -53,7 +53,7 @@ export function Login() {
 
                         <button
                             type="submit"
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-(--color-haze) hover:bg-(--color-haze) focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--color-haze) transform transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                            className="log-form-submit"
                         >
                             Войти
                         </button>

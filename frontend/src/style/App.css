@@ -10,5 +10,6 @@
   --color-haze: rgb(250, 171, 13);
   --color-haze-600: rgba(250, 171, 13, 0.6);
   --color-haze-200: rgba(250, 171, 13, 0.2);
+  --color-haze-light: rgb(255, 194, 72);
   --color-file: rgb(251, 218, 126);
 }
