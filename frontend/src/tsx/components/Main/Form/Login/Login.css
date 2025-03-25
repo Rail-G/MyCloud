@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+.log-form-input {
+    @apply shadow-sm rounded-lg w-full px-4 py-2.5 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--color-haze-600) transition-all duration-300
+}
+
+.log-form-remember {
+    @apply h-4 w-4 rounded border-gray-300 text-(--color-haze) focus:ring-(--color-haze) transition-colors duration-300
+}
