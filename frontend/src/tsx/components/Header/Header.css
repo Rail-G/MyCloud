@@ -14,7 +14,11 @@
 }
 
 .dropdown-block {
-@apply border border-gray-100 px-4 w-40 absolute bottom-[-45px] left-10 rounded-lg shadow-lg opacity-0 bg-white invisible group-hover:opacity-100 group-hover:visible
+@apply border border-gray-100 px-4 w-40 absolute bottom-[-45px] left-10 rounded-lg shadow-lg opacity-0 bg-white invisible z-3
+}
+
+.dropdown-block-active {
+    @apply opacity-100 visible
 }
 
 .dropdown-nav-block {
@@ -22,5 +26,5 @@
 }
 
 .auth-btns {
-@apply px-1.5 min-w-[80px] py-1.5 bg-(--color-haze) rounded text-white cursor-pointer hover:bg-(--color-haze-600)
+@apply px-1.5 min-w-[80px] py-1.5 bg-(--color-haze) rounded text-center text-white cursor-pointer hover:bg-(--color-haze-600)
 }

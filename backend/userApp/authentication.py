@@ -9,12 +9,11 @@ class TokenAndCsrfAuthentication(BaseAuthentication):
             return None
         
         cookie_token = request.COOKIES.get('a_t')
-
         if not cookie_token:
             logging.warning('Аутентификация провалена: Отсутствует запрошенный токен')
             raise AuthenticationFailed('Отсутствует запрошенный токен')
         
-        csrf = request.COOKIES.get('csrftoken')
+        csrf = request.COOKIES.get('csrf')
         if not csrf:
             logging.warning('Аутентификация провалена: Отсутствует csrf токен')
             raise AuthenticationFailed('Отсутствует csrf токен')

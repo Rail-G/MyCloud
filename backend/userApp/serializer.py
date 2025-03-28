@@ -8,12 +8,12 @@ class AdminSerializer(ModelSerializer):
     files = UsersFilesSerializer(read_only=True, many=True)
     class Meta:
         model = Users
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'files']
+        fields = ['id', 'username', 'email', 'is_staff', 'files']
 
 class UserSerializer(ModelSerializer):
     class Meta:
         model = Users
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'password']
+        fields = ['id', 'username', 'email', 'is_staff', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -26,7 +26,7 @@ class UserSerializer(ModelSerializer):
         
         regex_email = re.search(r'^[a-zA-Z]{1}[a-zA-Z0-9._-]{2,20}@[a-zA-Z0-9-]{1,10}\.[a-zA-Z]{2,3}$', value)
         if regex_email is None:
-            raise ValidationError('Некорректный email. Пожалуйста, не используйте прямой запрос на сервер. Для этого используйте клиентская форма')
+            raise ValidationError('Некорректный email')
         if Users.objects.filter(email=value).exists():
             raise ValidationError(f'Email {value} уже существует')
         

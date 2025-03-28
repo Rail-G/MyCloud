@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+
+@keyframes start-notif {
+    0% {
+        top: -40px;
+        opacity: 0;
+        visibility: visible;
+    }
+  
+    100% {
+        top: -20px;
+        opacity: 1
+    }
+}
+
+@keyframes end-notif {
+    0% {
+        top: -20px;
+        opacity: 1;
+    }
+
+    100% {
+        top: -40px;
+        opacity: 0;
+        visibility: hidden
+    }
+}
+
+.notif-block {
+    @apply absolute items-center px-5 py-12 mx-auto z-100
+}
+
+.notif-animation {
+    @apply animate-[start-notif_1s_ease-in-out_alternate_1_forwards,end-notif_1s_2s_forwards]
+}

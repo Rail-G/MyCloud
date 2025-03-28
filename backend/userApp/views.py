@@ -39,14 +39,14 @@ class UserLoginView(ModelViewSet):
         if user is not None:
             token = Token.objects.get_or_create(user=user)
 
-            get_token(request)
+            csrf = get_token(request)
 
             response = Response({
-                'user': {'username': user.username},
-                'message': 'Вы успешно вошли в аккаунт'
-            }, status=status.HTTP_200_OK)
+                'username': user.username, 'is_staff': user.is_staff
+                }, status=status.HTTP_200_OK)
             login(request, user)
-            response.set_cookie(key='a_t', value=token[0].key, httponly=True)
+            response.set_cookie(key='a_t', value=token[0].key, httponly=True, secure=True, samesite='None')
+            response.set_cookie(key='csrf', value=csrf, httponly=True, secure=True, samesite='None')
 
             return response
         else:
@@ -56,7 +56,7 @@ class UserLoginView(ModelViewSet):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         new_user = serializer.save()
-
+        
         token = Token.objects.create(user=new_user)
 
         return Response({
@@ -67,9 +67,9 @@ class UserLoginView(ModelViewSet):
         user_token = Token.objects.filter(key=request.COOKIES.get('a_t'))
         if user_token.exists():
             user_token.delete()
-            response = Response({'Вы успешно вышли из аккаунта'}, status=status.HTTP_204_NO_CONTENT)
+            response = Response({"message": 'Вы успешно вышли из аккаунта'}, status=status.HTTP_204_NO_CONTENT)
             response.delete_cookie('a_t')
-            response.delete_cookie('csrftoken')
+            response.delete_cookie('csrf')
             logout(request)
             return response
         return Response({'error': 'Не валидный токен'}, status=status.HTTP_403_FORBIDDEN)

@@ -1,52 +1,57 @@
-import { useState } from "react"
 import './Header.css'
+import { Link } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../hooks"
+import { useState } from 'react'
+import { logoutUser } from '../../redux/slice/FormSlice/FormSlice'
 export function Header() {
-    const [user, setUser] = useState({user: null, is_staff: true})
+    const {userInfo} = useAppSelector(state => state.form)
+    const [logoutBtn, setLogoutBtn] = useState(false)
+    const onClick = () => setLogoutBtn(prev => !prev)
+    const dispatch = useAppDispatch()
+    const onLogoutClick = () => dispatch(logoutUser())
     return (
         <header className="bg-gray-200">
             <div className="container mx-auto flex items-center justify-between">
                 <div className="p-0">
-                    <a href="#" className="flex items-center py-1">
+                    <Link to="/" className="flex items-center py-1">
                         <img src="src/img/haze.png" alt="" width='50px' height='50px' />
                         <span className="ml-2 font-(family-name:--font-roboto) font-medium text-lg">Haze Cloud</span>
-                    </a>
+                    </Link>
                 </div>
                 <div className="flex justify-center p-0 gap-x-2">
-                    <a className="nav-link hover-border group" href="">
+                    <Link className="nav-link hover-border group" to="/">
                         <svg width="20px" height="20px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path className="group-hover:fill-blue-400" d="M0 1H6L9 4H16V14H0V1Z" fill="#000000"></path> </g></svg>
-                        <span className='dropdown-nav-block bottom-[-40px]'>Хранилище</span>
-                    </a>
-                    <a className="nav-link hover-border group" href="">
+                        <span className='dropdown-nav-block bottom-[-40px] z-999'>Хранилище</span>
+                    </Link>
+                    <Link className="nav-link hover-border group" to="/about">
                         <svg className="group-hover:fill-(--color-haze)" version="1.1" id="svg2" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 1200 1200" enableBackground="new 0 0 1200 1200" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="path10706" d="M596.847,188.488c-103.344,0-187.12,97.81-187.12,218.465 c0,83.678,40.296,156.352,99.468,193.047l-68.617,31.801l-182.599,84.688c-17.64,8.821-26.444,23.778-26.444,44.947 c0,67.034,0,134.067,0,201.102c1.451,25.143,16.537,48.577,40.996,48.974h649.62c27.924-2.428,42.05-24.92,42.325-48.974 c0-67.034,0-134.068,0-201.102c0-21.169-8.804-36.126-26.443-44.947l-175.988-84.688l-73.138-34.65 c56.744-37.521,95.061-108.624,95.061-190.197C783.967,286.298,700.19,188.488,596.847,188.488L596.847,188.488z M295.023,265.312 c-44.473,1.689-79.719,20.933-106.497,51.596c-29.62,36.918-44.06,80.75-44.339,124.354c1.819,64.478,30.669,125.518,82.029,157.446 L21.163,693.997C7.05,699.289,0,711.636,0,731.041v161.398c1.102,21.405,12.216,39.395,33.055,39.703h136.284V761.436 c2.255-45.639,23.687-82.529,62.196-100.531l136.247-64.817c10.584-6.175,20.731-14.568,30.433-25.152 c-56.176-86.676-63.977-190.491-27.773-281.801C346.895,274.724,320.432,265.463,295.023,265.312L295.023,265.312z M903.609,265.312 c-29.083,0.609-55.96,11.319-78.039,26.444c35.217,92.137,25.503,196.016-26.482,276.52c11.467,13.23,23.404,23.377,35.753,30.434 l130.965,62.195c39.897,21.881,60.47,59.098,60.866,100.532v170.707h140.235c23.063-1.991,32.893-20.387,33.093-39.704V731.042 c0-17.641-7.05-29.987-21.163-37.045l-202.431-96.618c52.498-38.708,78.859-96.72,79.369-156.117 c-1.396-47.012-15.757-90.664-44.339-124.354C981.57,284.509,944.526,265.655,903.609,265.312L903.609,265.312z"></path> </g></svg>
-                        <span className='dropdown-nav-block bottom-[-40px]'>О нас</span>
-                    </a>
-                    {/* <a className="nav-link hover-border group" href="">
-                        <svg className="group-hover:fill-emerald-500" fill="#000000" height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 611.999 611.999"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M570.416,562.822c-5.758-109.379-104.063-154.627-104.063-154.627c-23.487-10.982-66.07-32.48-93.989-46.691 c35.77-39.134,46.335-102.939,47.98-112.018c7.465-41.08,3.708-91.926,3.708-91.926C417.226,58.685,317.399,57.132,306.945,57.236 c-0.577,0-0.952,0.006-0.952,0.006s-0.319-0.006-0.792,0c-9.478-0.123-110.404,0.878-117.267,100.318 c0,0-3.757,50.84,3.708,91.926c0.485,2.646,1.75,10.018,4.15,19.987c18.803,24.684,47.832,36.789,71.657,42.713 c2.996-2.91,7.078-4.721,11.602-4.721h43.425c9.19,0,16.63,7.446,16.63,16.636c0,9.196-7.44,16.648-16.63,16.648h-43.425 c-6.857,0-12.719-4.137-15.279-10.037c-17.771-4.322-38.336-11.848-56.691-24.794c7.323,19.011,17.759,39.404,32.553,55.592 c-27.919,14.211-70.484,35.702-93.989,46.685c0,0-98.292,45.248-104.063,154.627c0,0-1.707,18.189,32.762,25.076 c0,0,105.597,24.1,231.661,24.1c126.076,0,231.673-24.1,231.673-24.1C572.141,581.011,570.416,562.822,570.416,562.822z"></path> <path d="M154.147,284.944h10.491V161.722c0.025-0.307,0.098-0.602,0.098-0.915v-18.195c0-32.437,10.012-58.729,29.76-78.151 c40.847-40.19,110.619-39.643,111.797-39.478c0.829-0.061,70.018-1.056,111.048,39.103c19.883,19.46,29.969,45.874,29.969,78.526 v19.239c0,0.19,0.049,0.362,0.049,0.546v122.546h10.491c25.819,0,46.746-20.927,46.746-46.74v-44.923 c0-20.767-13.56-38.348-32.308-44.432v-6.231c0-39.619-12.615-72.043-37.47-96.377C386.361-1.186,308.958,0.042,306.251,0.005 c-3.253-0.031-80.73-0.982-129.164,46.531c-24.769,24.309-37.335,56.635-37.335,96.076v6.206 c-18.772,6.083-32.345,23.677-32.345,44.456v44.923C107.408,264.017,128.34,284.944,154.147,284.944z"></path> </g> </g> </g></svg>
-                        <span className='dropdown-nav-block bottom-[-65px]'>Служба поддержки</span>
-                    </a> */}
-                    {user.is_staff 
-                    && <a className="nav-link hover-border group" href="">
+                        <span className='dropdown-nav-block bottom-[-40px] z-999'>О нас</span>
+                    </Link>
+                    {userInfo && userInfo!.is_staff 
+                    && <Link className="nav-link hover-border group" to="/admin">
                             <svg className="group-hover:fill-red-600" fill="#000000" height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 472.811 472.811"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M414.763,308.966c-5.547,0-10.696,1.519-15.15,4.115c-1.633,0.956-3.715,0.516-4.825-1.01l-44.236-60.429 c-6.643-9.071-6.643-21.401,0-30.472l44.221-60.414c1.111-1.526,3.208-1.965,4.841-1.008c4.438,2.596,9.603,4.13,15.15,4.13 c16.818,0,30.458-13.626,30.458-30.45c0-16.816-13.64-30.442-30.458-30.442c-16.8,0-30.441,13.625-30.441,30.442 c0,1.888-1.417,3.468-3.299,3.668l-74.354,8.084c-11.175,1.219-21.856-4.947-26.388-15.229l-30.226-68.482 c-0.757-1.719-0.094-3.738,1.526-4.678c9.124-5.263,15.273-15.082,15.273-26.341c0-16.816-13.641-30.45-30.456-30.45 c-16.802,0-30.443,13.633-30.443,30.45c0,11.259,6.15,21.078,15.26,26.341c1.635,0.94,2.282,2.952,1.526,4.678l-30.21,68.475 c-4.531,10.289-15.214,16.455-26.389,15.236l-74.356-8.084c-1.879-0.201-3.297-1.78-3.297-3.668 c0-16.816-13.642-30.442-30.457-30.442c-16.802,0-30.441,13.625-30.441,30.442c0,16.824,13.64,30.45,30.441,30.45 c5.564,0,10.712-1.534,15.166-4.13c1.649-0.957,3.729-0.524,4.841,1.008l44.221,60.414c6.628,9.071,6.628,21.401,0,30.472 l-44.236,60.429c-1.109,1.526-3.206,1.966-4.841,1.018c-4.454-2.604-9.587-4.123-15.15-4.123c-16.802,0-30.441,13.624-30.441,30.442 c0,16.824,13.64,30.45,30.441,30.45c16.815,0,30.457-13.626,30.457-30.45c0-1.912,1.418-3.491,3.297-3.692l74.356-8.085 c11.175-1.218,21.857,4.948,26.389,15.236l30.21,68.475c0.756,1.719,0.093,3.737-1.526,4.678 c-9.109,5.264-15.26,15.081-15.26,26.341c0,16.817,13.642,30.45,30.443,30.45c16.815,0,30.456-13.632,30.456-30.45 c0-11.26-6.149-21.077-15.273-26.341c-1.62-0.941-2.283-2.96-1.526-4.678l30.226-68.483c4.531-10.28,15.213-16.446,26.388-15.228 l74.354,8.085c1.882,0.201,3.299,1.788,3.299,3.692c0,16.824,13.642,30.45,30.441,30.45c16.818,0,30.458-13.626,30.458-30.45 C445.221,322.59,431.581,308.966,414.763,308.966z"></path> </g></svg>
-                            <span className='dropdown-nav-block bottom-[-40px]'>Администратор</span>
-                        </a>}
+                            <span className='dropdown-nav-block bottom-[-40px] z-999'>Администратор</span>
+                        </Link>}
                 </div>
                 <div className='border-l-1 border-black p-0'>
-                    {user
+                    {userInfo != null
                     ? <div className='py-[10px] px-4 flex justify-center gap-x-15 items-center relative'>
                         <img className='w-[35px] h-[35px] block' src="src/img/171.png" alt="" />
-                        <span className='ml-[-40px] text-base'>Rail</span>
-                        <div className='group'>
-                            <button className='user-dropdown-btn'></button>
-                            <div className='dropdown-block'>
+                        <span className='ml-[-40px] text-base'>{userInfo.username}</span>
+                        <div>
+                            <button onClick={onClick} className='user-dropdown-btn'></button>
+                            <div className={`dropdown-block ${logoutBtn && 'dropdown-block-active'}`}>
                                 <ul className="p-0 m-0">
-                                    <li className='hover:text-red-500 font-medium text-center py-1 cursor-pointer'>Logout</li>
+                                    <li className='font-medium text-center py-1'>
+                                        <button onClick={onLogoutClick} className='p-1.5 rounded cursor-pointer bg-red-500 text-white'>Logout</button>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     : <div className="flex justify-center items-center gap-x-5.5 pl-9 pr-4 py-[10px]">
-                        <button className="auth-btns">Log In</button>
-                        <button className="auth-btns">Sign Up</button>
+                        <Link to="/login" className="auth-btns">Log In</Link>
+                        <Link to="/registration" className="auth-btns">Sign Up</Link>
                     </div>
                     }
                 </div>
