@@ -42,7 +42,7 @@ class UserLoginView(ModelViewSet):
             csrf = get_token(request)
 
             response = Response({
-                'username': user.username, 'is_staff': user.is_staff
+                'id': user.id, 'username': user.username, 'is_staff': user.is_staff
                 }, status=status.HTTP_200_OK)
             login(request, user)
             response.set_cookie(key='a_t', value=token[0].key, httponly=True, secure=True, samesite='None')

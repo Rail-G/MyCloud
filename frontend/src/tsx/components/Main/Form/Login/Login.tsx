@@ -12,11 +12,9 @@ export function Login() {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/')
-        }
-    }, [isAuthenticated])
+    if (isAuthenticated) {
+        navigate('/')
+    }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
