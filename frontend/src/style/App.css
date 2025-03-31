@@ -1,8 +1,6 @@
 @import "tailwindcss";
-
-
 #root {
- @apply min-h-screen flex flex-col 
+ @apply min-h-screen max-h-full flex flex-col 
 }
 
 :root {
@@ -12,4 +10,24 @@
   --color-haze-200: rgba(250, 171, 13, 0.2);
   --color-haze-light: rgb(255, 194, 72);
   --color-file: rgb(251, 218, 126);
+}
+
+.tool-main {
+  @apply bg-gray-200/80 fixed top-0 left-0 bottom-0 right-0 flex justify-center items-center z-1 transition-all duration-300
+}
+
+.tool-body {
+  @apply bg-white shadow-2xl rounded-xl px-8 py-6 max-w-md w-full transform transition-all duration-300 relative
+}
+
+.tool-close-btn {
+  @apply absolute w-10 h-10 bg-(--color-haze-light) rounded-full -top-4 -right-4 shadow-sm cursor-pointer flex justify-center items-center
+}
+
+.tool-input {
+  @apply w-full shadow-sm p-2 rounded focus:outline-0 focus:ring-2 focus:ring-(--color-haze-600)
+}
+
+.tool-submit-btn {
+  @apply w-full p-2 shadow-sm text-center rounded-xl text-sm font-medium text-white bg-(--color-haze) hover:bg-(--color-haze) focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--color-haze) transform transition-all duration-300 cursor-pointer
 }

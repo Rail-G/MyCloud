@@ -18,22 +18,22 @@ class UsersFolders(models.Model):
         while next_parent_folder:
             folder_name = f"{next_parent_folder.folder_name}/{folder_name}"
             next_parent_folder = next_parent_folder.parent_folder
-        return os.path.join(settings.MEDIA_ROOT, self.user.username, folder_name)
+        return os.path.join(settings.MEDIA_ROOT, folder_name)
     
     def save(self, *args, **kwargs):
         if not self.pk:
             parent_path = ''
             if self.parent_folder:
                 parent_path = self.parent_folder.get_absolute_path()
-            folder_path = os.path.join(settings.MEDIA_ROOT, self.user.username, parent_path, self.folder_name)
+            folder_path = os.path.join(settings.MEDIA_ROOT, parent_path, self.folder_name)
             if os.path.exists(folder_path):
                 raise ValidationError("Папка с таким именем уже существует на файловой системе.")
             os.makedirs(folder_path)
         else:
             parent_path = self.parent_folder.get_absolute_path()
             old_folder_name = UsersFolders.objects.get(pk=self.id).folder_name
-            new_folder_path = os.path.join(settings.MEDIA_ROOT, self.user.username, parent_path, self.folder_name)
-            old_folder_path = os.path.join(settings.MEDIA_ROOT, self.user.username, parent_path, old_folder_name)
+            new_folder_path = os.path.join(settings.MEDIA_ROOT, parent_path, self.folder_name)
+            old_folder_path = os.path.join(settings.MEDIA_ROOT, parent_path, old_folder_name)
             if os.path.exists(new_folder_path):
                 raise ValidationError("Папка с таким именем уже существует на файловой системе.")
             os.rename(old_folder_path, new_folder_path)

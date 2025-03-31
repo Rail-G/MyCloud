@@ -6,3 +6,7 @@ class UsersFilesSerializer(ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created', 'downloaded', 'size', 'file_name', 'share_link', 'extensions']
 
+class UsersFilesInFolderSerializer(ModelSerializer):
+    class Meta: 
+        model = UsersFiles
+        exclude = ['folder']

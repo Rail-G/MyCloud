@@ -1,43 +1,130 @@
-import { Edit } from '../../Form/Edit/Edit'
+import { useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../../../hooks'
+import { Loader } from '../../Loader/Loader'
 import './CloudBody.css'
-export function CloudBody() {
+import { File } from './File/File'
+import { Folder } from './Folder/Folder'
+import { getStorageItems, setCurrentFolder } from '../../../../redux/slice/StorageSlice/StorageSlice'
+import { FileInfo } from '../FileInfo/FileInfo'
+import { Edit } from '../FileInfo/Edit/Edit'
+import { ShareLink } from '../FileInfo/ShareLink/ShareLink'
+import { Warning } from '../Warning/Warning'
+import { deleteFile } from '../../../../redux/slice/FileSlice/FileSlice'
+export function CloudBody({searchValue}: {searchValue: string}) {
+    const [info, setInfo] = useState<{ set: boolean, fileId: number | null }>({ set: false, fileId: null })
+    const [edit, setEdit] = useState<{ set: boolean, fileId: number | null, fileExt: string }>({ set: false, fileId: null, fileExt: ''})
+    const [share, setShare] = useState(false)
+    const [delFile, setDeFile] = useState(false)
+    const { files, folders, curentfolders, currentFolder, loading } = useAppSelector(state => state.storage)
+    const {created} = useAppSelector(state => state.file)
+    const dispatch = useAppDispatch()
+    const onClickSendToServer = (folderId: number) => {
+        if (folderId == currentFolder) {
+            return
+        }
+        dispatch(setCurrentFolder({folderId: folderId, filterCount: [...curentfolders].findIndex(folder => folder.id == folderId)}))
+    }
+    const onClickToConfirm = () => {
+        dispatch(deleteFile({id: info.fileId!, currentFolder: currentFolder!}))
+        setInfo({set: false, fileId: null})
+    }
+    useEffect(() => {
+        if (!files.length && !folders.length) {
+            dispatch(getStorageItems(currentFolder))
+        }
+    }, [])
+
+    // useEffect(() => {
+    //     if (created) {
+    //         dispatch(setCurrentFolder({folderId: currentFolder!, filterCount: curentfolders.length - 1}))
+    //     }
+    // }, [created])
     return (
-        <section className="w-full h-full">
-            <h2 className="text-xl font-bold mb-5">File Manager</h2>
-            <div className="flex flex-col justify-between h-[calc(100%-40px)]">
-                <div className="grid grid-cols-[repeat(6,183.5px)] auto-rows-[250px] gap-5 w-full mx-auto mb-6">
-                    <div className="bg-white hover:shadow-md cursor-pointer px-5 py-5 flex justify-center flex-col">
-                        <svg className="mx-auto" width="120px" height="120px" viewBox="0 -3.5 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fillRule="evenodd" clipRule="evenodd" d="M2.90909 0H11.2834C12.4407 0 13.5506 0.459739 14.369 1.27808L14.7219 1.63101C15.5402 2.44935 16.6502 2.90909 17.8074 2.90909H23.2727C24.0761 2.90909 24.7617 3.1931 25.3297 3.76115C25.8977 4.32918 26.1818 5.01487 26.1818 5.81818V21.8182C26.1818 22.6215 25.8977 23.3072 25.3297 23.8752C24.7617 24.4432 24.0761 24.7273 23.2727 24.7273H2.90909C2.10576 24.7273 1.42009 24.4432 0.852052 23.8752C0.284017 23.3072 0 22.6215 0 21.8182V2.90909C0 2.10576 0.284017 1.42009 0.852052 0.852052C1.42009 0.284017 2.10576 0 2.90909 0Z" fill="url(#paint0_linear_103_1791)"></path> <path fillRule="evenodd" clipRule="evenodd" d="M5.81818 21.8182V8.72727C5.81818 7.92395 6.1022 7.23827 6.67024 6.67023C7.23827 6.1022 7.92395 5.81818 8.72727 5.81818H29.0909C29.8942 5.81818 30.5799 6.1022 31.1479 6.67023C31.716 7.23827 32 7.92395 32 8.72727V21.8182C32 22.6215 31.716 23.3072 31.1479 23.8752C30.5799 24.4432 29.8942 24.7273 29.0909 24.7273H2.90909C3.71241 24.7273 4.3981 24.4432 4.96612 23.8752C5.53417 23.3072 5.81818 22.6215 5.81818 21.8182Z" fill="url(#paint1_linear_103_1791)"></path> <defs> <linearGradient id="paint0_linear_103_1791" x1="16" y1="0" x2="16" y2="16.3543" gradientUnits="userSpaceOnUse"> <stop stopColor="#FBA200"></stop> <stop offset="1" stopColor="#FF7300"></stop> </linearGradient> <linearGradient id="paint1_linear_103_1791" x1="17.4545" y1="5.81818" x2="17.4545" y2="24.7273" gradientUnits="userSpaceOnUse"> <stop stopColor="#FAC227"></stop> <stop offset="1" stopColor="#FAA627"></stop> </linearGradient> </defs> </g></svg>
-                        <div className="text-center mt-2">
-                            <h2 className="font-medium">Папка номер 1 </h2>
-                            <p className="text-xs">22.03.2025, 16:42 </p>
-                        </div>
-                    </div>
-                    <div className="bg-white hover:shadow-md cursor-pointer px-5 py-5 flex justify-center flex-col">
-                        <div className="relative mb-2">
-                            <svg className="mx-auto" width="120px" height="120px" viewBox="-3 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>file-document</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"> <g id="Icon-Set" transform="translate(-154.000000, -99.000000)" fill="#fbda7e"> <path d="M174,107 C172.896,107 172,106.104 172,105 L172,101 L178,107 L174,107 L174,107 Z M178,127 C178,128.104 177.104,129 176,129 L158,129 C156.896,129 156,128.104 156,127 L156,103 C156,101.896 156.896,101 158,101 L169.972,101 C169.954,103.395 170,105 170,105 C170,107.209 171.791,109 174,109 L178,109 L178,127 L178,127 Z M172,99 L172,99.028 C171.872,99.028 171.338,98.979 170,99 L158,99 C155.791,99 154,100.791 154,103 L154,127 C154,129.209 155.791,131 158,131 L176,131 C178.209,131 180,129.209 180,127 L180,109 L180,107 L172,99 L172,99 Z" id="file-document"> </path> </g> </g> </g></svg>
-                            <span className="file-img-text">TXT</span>
-                        </div>
-                        <div className="text-center">
-                            <h2 className="font-medium">observation.txt</h2>
-                            <p className="text-xs">22.03.2025, 16:42 </p>
-                            <p className='text-xs overflow-x-hidden'>Тут маленький комментарйи, который не большой но проверим</p>
-                        </div>
-                    </div>
-                    <div className="bg-white hover:shadow-md cursor-pointer px-5 py-5 flex justify-center flex-col">
-                        <div className="relative mb-2">
-                            <svg className="mx-auto" width="120px" height="120px" viewBox="-3 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>file-document</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"> <g id="Icon-Set" transform="translate(-154.000000, -99.000000)" fill="#fbda7e"> <path d="M174,107 C172.896,107 172,106.104 172,105 L172,101 L178,107 L174,107 L174,107 Z M178,127 C178,128.104 177.104,129 176,129 L158,129 C156.896,129 156,128.104 156,127 L156,103 C156,101.896 156.896,101 158,101 L169.972,101 C169.954,103.395 170,105 170,105 C170,107.209 171.791,109 174,109 L178,109 L178,127 L178,127 Z M172,99 L172,99.028 C171.872,99.028 171.338,98.979 170,99 L158,99 C155.791,99 154,100.791 154,103 L154,127 C154,129.209 155.791,131 158,131 L176,131 C178.209,131 180,129.209 180,127 L180,109 L180,107 L172,99 L172,99 Z" id="file-document"> </path> </g> </g> </g></svg>
-                            <span className="file-img-text">JPEG</span>
-                        </div>
-                        <div className="text-center">
-                            <h2 className="font-medium">cloud.jpeg</h2>
-                            <p className="text-xs">25.03.2025, 13:26 </p>
-                            <p className='text-xs overflow-x-hidden'>Комментарий на 55 букв или 22 букв на строке</p>
-                        </div>
+        <>
+            {loading && <Loader />}
+            {info.set && <FileInfo setInfo={setInfo} setEdit={setEdit} setShare={setShare} setDelete={setDeFile} fileId={info.fileId} />}
+            {edit.set && <Edit setEdit={setEdit} fileId={edit.fileId!} fileExt={edit.fileExt}/>}
+            {share && <ShareLink setShare={setShare}/>}
+            {delFile && <Warning state={setDeFile} onConfirm={onClickToConfirm}/>}
+            {!loading && <section className="w-full h-full">
+                <h2 className="text-xl font-bold mb-2.5">File Manager</h2>
+                <div className='w-full mb-2.5'>
+                    <ul className='list-none flex flex-wrap'>
+                        {curentfolders.map((folder) => (
+                            <li onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
+                                {`${folder.folder_name}  >  `}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="flex flex-col justify-between h-[calc(100%-40px)]">
+                    <div className="w-full mx-auto mb-6">
+                        <ul className='list-none grid grid-cols-[repeat(6,183.5px)] auto-rows-[240px] gap-5 h-full'>
+                            {folders.filter(el => el.folder_name.toLowerCase().includes(searchValue.toLowerCase())).map(folder => (
+                                <li key={`folder_${folder.id}`}>
+                                    <Folder id={folder.id} folder_name={folder.folder_name} />
+                                </li>
+                            ))}
+                            {files.filter(el => el.file_name.toLowerCase().includes(searchValue.toLowerCase())).map(file => (
+                                <li key={`files_${file.id}`}>
+                                    <File file={file} setInfo={setInfo} />
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <Edit />
-        </section>
+                {/* <div className="p-2 border-t dark:border-gray-700  w-full">
+                    <nav role="navigation" aria-label="Pagination Navigation" className="flex items-center">
+
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center">
+                                <div className="pl-2 text-sm font-medium dark:text-white">
+                                    Showing 11 to 20 of 99 results
+                                    {`Показано от ${[...files, ...folders].length} до ${[...files, ...folders].length} из ${[...files, ...folders].length}`}
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-end">
+                                <div className="py-3 border rounded-lg dark:border-gray-600">
+                                    <ol
+                                        className="flex items-center text-sm text-gray-500 divide-x rtl:divide-x-reverse divide-gray-300 dark:text-gray-400 dark:divide-gray-600">
+                                        <li>
+                                            <button type="button"
+                                                className="relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-yellow-500/10 focus:ring-2 focus:ring-yellow-500 dark:hover:bg-gray-400/5 transition text-yellow-600"
+                                                aria-label="Previous" rel="prev">
+                                                <svg className="w-5 h-5 rtl:scale-x-[-1]" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd"
+                                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <label htmlFor='pagination' className='relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-yellow-500/10 focus:ring-2 focus:ring-yellow-500 dark:hover:bg-gray-400/5 focus:text-yellow-600 transition'>
+                                                <input className='w-[0.6rem] z-1' id='pagination' type="text" />
+                                                <span className="absolute left-[50%] -translate-x-[50%]">...</span>
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <button type="button"
+                                                className="relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-yellow-500/10 focus:ring-2 focus:ring-yellow-500 dark:hover:bg-gray-400/5 transition text-yellow-600"
+                                                aria-label="Next" rel="next">
+                                                <svg className="w-5 h-5 rtl:scale-x-[-1]" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd"
+                                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                            </button>
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div> */}
+            </section>}
+        </>
     )
 }

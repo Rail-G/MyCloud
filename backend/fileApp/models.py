@@ -11,6 +11,7 @@ def customDir(instance, filename):
     renamed_file_name, new_file_path = renamer(instance.user, filename, instance.folder)
     instance.file_name = renamed_file_name
     instance.extensions = renamed_file_name.split('.')[-1]
+    print(new_file_path)
     return new_file_path
 
 def renamer(user, filename, folder=None):
@@ -20,18 +21,14 @@ def renamer(user, filename, folder=None):
     while user.files.filter(file_name=f'{copyed_file_name}.{file_ext}', folder=folder).exists():
         copyed_file_name = f'{file_name}_{counter}'
         counter += 1
-    if folder is not None:
-       folders = ''
-       while folder is not None:
-            folders = f'{folder.folder_name}/{folders}'
-            if folder.parent_folder is not None:
-                folder = folder.parent_folder
-            else: 
-                break
-           
-       file_path = f'{user}/{folders}/{copyed_file_name}.{file_ext}'
-    else: 
-        file_path = f'{user}/{copyed_file_name}.{file_ext}'
+    folders = ''
+    while folder is not None:
+        folders = f'{folder.folder_name}/{folders}'
+        if folder.parent_folder is not None:
+            folder = folder.parent_folder
+        else: 
+            break
+    file_path = f'{folders}{copyed_file_name}.{file_ext}'
     return f'{copyed_file_name}.{file_ext}', file_path
 
 class UsersFiles(models.Model):
@@ -48,15 +45,16 @@ class UsersFiles(models.Model):
 
     def save(self, *args, **kwargs):
         if self.file_name:
-            self_file_name = self.file_name
-            original_file_name = os.path.basename(self.file.name)
+            self_file_name = '_'.join(self.file_name.split())
+            original_file_name = '_'.join(os.path.basename(self.file.name).split())
             if self_file_name != original_file_name:
                 if self.id:
                     old_full_file_path = self.file.path
-                    file_name, file_path = renamer(self.user, self_file_name)
-                    self.file_name = file_name
+                    file_path = customDir(self, self_file_name)
+                    self.file_name = self_file_name
                     self.file.name = file_path
-                    new_full_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
+                    new_full_file_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, file_path))
+                    print(settings.MEDIA_ROOT, file_path, new_full_file_path)
                     os.rename(old_full_file_path, new_full_file_path)
         self.size = self.file.size
         return super().save(*args, **kwargs)

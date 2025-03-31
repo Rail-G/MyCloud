@@ -28,7 +28,10 @@ class FileView(ModelViewSet):
             user_files = request.user.files.all()
         serializer = self.serializer_class(user_files, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+    def create(self, request, *args, **kwargs):
+        print(request.body)
+        return super().create(request, *args, **kwargs)
+
     def partial_update(self, request, pk=None, *args, **kwargs):
         file = get_object_or_404(self.queryset, pk=pk)
         serializer = self.serializer_class(file, data=request.data, partial=True)
