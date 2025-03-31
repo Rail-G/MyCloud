@@ -6,6 +6,8 @@ import { Login } from "../Main/Form/Login/Login"
 import { Registration } from "../Main/Form/Registration/Registration"
 import { Provider } from "react-redux"
 import { store } from "../../redux/store/store"
+
+
 export function Router() {
     return (
         <Provider store={store}>

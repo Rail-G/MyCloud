@@ -10,7 +10,7 @@ export function Header() {
     const dispatch = useAppDispatch()
     const onLogoutClick = () => dispatch(logoutUser())
     return (
-        <header className="bg-gray-200">
+        <header className="bg-gray-200 z-2">
             <div className="container mx-auto flex items-center justify-between">
                 <div className="p-0">
                     <Link to="/" className="flex items-center py-1">
