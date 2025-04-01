@@ -34,6 +34,7 @@ export function Edit({setEdit, fileId, fileExt}: EditProp) {
                 folder: currentFolder!,
             }
         ))
+        setEdit({set: false, fileId: null, fileExt: ''})
         setValue({fileName: '', comment: ''})
     }
     return (

@@ -1,15 +1,16 @@
 import { JSX } from 'react'
 import { useAppSelector } from '../../../hooks'
 import './Notification.css'
-export function Notification({text}: {text: string}): JSX.Element {
-    const {userInfo} = useAppSelector(state => state.form)
+import { NotificationType } from '../../../typing'
+
+export function Notification({operationType, text}: NotificationType): JSX.Element {
     return (
-        <div className='flex justify-center w-full'>
-            <div className='notif-block notif-animation'>
-            <div className="p-6 rounded-xl bg-green-50">
+        <div className='flex justify-center w-full absolute'>
+            <div className='notif-main notif-animation'>
+            <div className={`notif-block ${operationType ? 'notif-block-success' : 'notif-block-error'}`}>
                 <div className="flex">
-                        <div className="text-sm text-green-600">
-                            <p>{`${text} ${userInfo?.username}`}</p>
+                        <div className={`${operationType ? 'notif-text-seccess' : 'notif-text-error'}`}>
+                            <p>{`${text}`}</p>
                         </div>
                 </div>
             </div>

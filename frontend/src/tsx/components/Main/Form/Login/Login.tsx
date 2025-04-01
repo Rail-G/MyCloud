@@ -9,6 +9,7 @@ export function Login() {
     const [data, setData] = useState<FormData>({ username: '', password: '' })
     const [errorFront, setErrorFront] = useState({ username: false, email: false, password: false })
     const {userInfo, loading, error, isAuthenticated } = useAppSelector(state => state.form)
+    const [typing, setTyping] = useState(false)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
 
@@ -16,14 +17,20 @@ export function Login() {
         navigate('/')
     }
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!typing) {
+            setTyping(true)
+        }
+        setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (!/^[a-z0-9]{0,75}$/gi.test(data.username)) {
-            setErrorFront(prev => ({...prev, username: true}))
-            return
-        }
+        setTyping(false)
+        // if (!/^[a-z0-9]{0,75}$/gi.test(data.username)) {
+        //     setErrorFront(prev => ({...prev, username: true}))
+        //     return
+        // }
         // if (data.email && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/gi.test(data.email))
         //     setError(prev => ({...prev, email: true}))
         dispatch(getUser(data))
@@ -39,8 +46,7 @@ export function Login() {
                             <div>
                                 <label htmlFor="email" className="text-sm font-medium text-(--color-haze) mb-2 flex">
                                     <span>Имя пользователя</span>
-                                    {errorFront.username && <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">Неужели забыли своё имя?</p>}
-                                    {(error != null && error.error) && <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">{error.error}</p>}
+                                    {(error != null && error.error && !typing ) && <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">{error.error}</p>}
                                 </label>
                                 <input
                                     type="username"
@@ -49,7 +55,9 @@ export function Login() {
                                     className="log-form-input"
                                     placeholder="Моё имя..."
                                     value={data.username}
+                                    maxLength={50}
                                     onChange={onChange}
+                                    pattern='^[a-z0-9]{0,75}$'
                                     required
                                 />
                             </div>
@@ -57,7 +65,6 @@ export function Login() {
                             <div>
                                 <label htmlFor="password" className="text-sm font-medium text-(--color-haze) mb-2 flex">
                                     <span>Пароль</span>
-                                    <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">Пароль не подходит!</p>
                                 </label>
                                 <input
                                     type="password"

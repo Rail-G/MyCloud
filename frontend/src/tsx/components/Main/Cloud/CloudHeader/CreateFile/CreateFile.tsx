@@ -26,6 +26,7 @@ export function CreateFile({setAddFile}: AddFileType) {
         formData.append('file', file!);
         formData.append('comment', comment);
         formData.append('folder', `${currentFolder}`);
+        setAddFile(prev => !prev)
         setComment('')
         dispatch(addFileThunk(formData))
     }

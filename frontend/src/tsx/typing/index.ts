@@ -14,8 +14,9 @@ export interface FormData {
 export interface UserInfo {
     id: number,
     username: string,
-    email: string
-    is_staff: boolean
+    email: string,
+    is_staff: boolean,
+    user_folder: number,
 }
 
 export interface FormState {
@@ -102,4 +103,9 @@ export interface PathFile {
 export interface SearchTool {
     searchValue: string,
     onChangeSearchValue: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface NotificationType {
+    operationType: boolean,
+    text: string
 }

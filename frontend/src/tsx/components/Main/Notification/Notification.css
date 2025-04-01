@@ -22,14 +22,35 @@
     100% {
         top: -40px;
         opacity: 0;
-        visibility: hidden
+        visibility: hidden;
+        display: none;
     }
 }
 
-.notif-block {
+.notif-main {
     @apply absolute items-center px-5 py-12 mx-auto z-100
 }
 
 .notif-animation {
     @apply animate-[start-notif_1s_ease-in-out_alternate_1_forwards,end-notif_1s_2s_forwards]
+}
+
+.notif-block {
+    @apply p-6 rounded-xl
+}
+
+.notif-block-success {
+    @apply bg-green-50
+}
+
+.notif-block-error {
+    @apply bg-red-50
+}
+
+.notif-text-seccess {
+    @apply text-sm text-green-600
+}
+
+.notif-text-error {
+    @apply text-sm text-red-600
 }

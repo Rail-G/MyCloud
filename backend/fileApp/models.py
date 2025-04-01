@@ -54,7 +54,8 @@ class UsersFiles(models.Model):
                     self.file_name = self_file_name
                     self.file.name = file_path
                     new_full_file_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, file_path))
-                    print(settings.MEDIA_ROOT, file_path, new_full_file_path)
+                    if os.path.exists(new_full_file_path):
+                        raise ValidationError(f"Файл с именем '{self_file_name}' уже существует. Пожалуйста, переименуйте файл.")
                     os.rename(old_full_file_path, new_full_file_path)
         self.size = self.file.size
         return super().save(*args, **kwargs)

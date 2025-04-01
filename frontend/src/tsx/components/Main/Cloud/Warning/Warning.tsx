@@ -7,6 +7,10 @@ interface Warning {
 
 export function Warning({state, onConfirm}: Warning) {
     const onClick = () => state(prev => !prev)
+    const onClickToConfirm = () => {
+        state(prev => !prev)
+        onConfirm()
+    }
     return (
         <section className='tool-main'>
             <div className='tool-body'>
@@ -18,7 +22,7 @@ export function Warning({state, onConfirm}: Warning) {
                 <h2 className='text-2xl font-bold text-center mb-8 text-(--color-haze)'>Вы точно хотите это сделать?</h2>
                 <div className='space-y-4'>
                     <div>
-                        <button onClick={onConfirm} className='tool-submit-btn'>
+                        <button onClick={onClickToConfirm} className='tool-submit-btn'>
                             Удалить
                         </button>
                     </div>

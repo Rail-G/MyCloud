@@ -70,12 +70,12 @@ export const changeFileEpic: Epic<RootAction, RootAction, RootState> = (action$)
             withCredentials: true
         }).pipe(
             mergeMap((responseData) => [fileSuccess(responseData.response as null), getStorageItems(action.payload.folder)]),
-            catchError(error => of(fileError(error.response)))
+            catchError(error => of(fileError(error.response[0])))
         )
     )
 )
 
-export const setFolderEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
-    ofType('file/upload/fulfilled'),
-    map((action) => getStorageItems(action))
-)
+// export const setFolderEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
+//     ofType('file/upload/fulfilled'),
+//     map((action) => getStorageItems(action))
+// )

@@ -7,6 +7,7 @@ import { Loader } from '../../Loader/Loader'
 export function Registration() {
     const [data, setData] = useState({ username: '', email: '', password: '', confirmPassword: '' })
     const [errorFront, setErrorFront] = useState({ username: false, email: false, password: false })
+    const [typing, setTyping] = useState(false)
     const { loading, error, isAuthenticated } = useAppSelector(state => state.form)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -17,10 +18,16 @@ export function Registration() {
         }
     }, [isAuthenticated])
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!typing) {
+            setTyping(true)
+        }
+        setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setTyping(false)
         if (!/^[a-z0-9]{0,75}$/gi.test(data.username)) {
             setErrorFront(prev => ({ ...prev, username: true }))
             return
@@ -48,8 +55,7 @@ export function Registration() {
                                 <div>
                                     <label htmlFor="username" className="flex text-(--color-haze) font-semibold mb-2">
                                         <span>Имя пользователя</span>
-                                        {errorFront.username && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="usernameError">Только буквы или цифры</p>}
-                                        {(error != null && error.username) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="usernameError">{error.username}</p>}
+                                        {(error != null && error.username && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="usernameError">{error.username}</p>}
                                     </label>
                                     <input
                                         type="text"
@@ -66,7 +72,7 @@ export function Registration() {
                                     <label htmlFor="email" className="flex text-(--color-haze) font-semibold mb-2">
                                         <span>Email</span>
                                         {errorFront.email && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="emailError">Не валидный email</p>}
-                                        {(error != null && error.email) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="emailError">{error.email}</p>}
+                                        {(error != null && error.email && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="emailError">{error.email}</p>}
                                     </label>
                                     <input
                                         type="email"
@@ -83,7 +89,7 @@ export function Registration() {
                                 <div>
                                     <label htmlFor="password" className="flex text-(--color-haze) font-semibold mb-2">
                                         <span>Пароль</span>
-                                        {(error != null && error.password) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="passwordError">Пользователь с таким паролем уже существует</p>}
+                                        {(error != null && error.password && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="passwordError">Пользователь с таким паролем уже существует</p>}
                                     </label>
                                     <input
                                         type="password"
@@ -100,7 +106,7 @@ export function Registration() {
                                 <div>
                                     <label htmlFor="confirm-password" className="flex text-(--color-haze) font-semibold mb-2">
                                         <span>Подтверждение пароля</span>
-                                        {errorFront.password && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="confirmPasswordError">Пароли не совподают</p>}
+                                        {(errorFront.password && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="confirmPasswordError">Пароли не совподают</p>}
                                     </label>
                                     <input
                                         type="password"

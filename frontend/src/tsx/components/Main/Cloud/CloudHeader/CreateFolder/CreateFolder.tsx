@@ -12,6 +12,7 @@ export function CreateFolder({folderState, onConfirm}: AddFolderType) {
     const onClickToCloseFolder = () => folderState(false)
     const onSubmit = (e: React.FormEvent, value: string) => {
         e.preventDefault()
+        folderState(false)
         onConfirm(value)
     }
     return (

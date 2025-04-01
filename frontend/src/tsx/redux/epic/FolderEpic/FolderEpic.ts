@@ -10,7 +10,7 @@ export const addFolderEpic: Epic<RootAction, RootAction, RootState> = (action$) 
     ofType(addFolder.type),
     switchMap((action) => 
         ajax({
-            url: `${import.meta.env.VITE_SERVER_URL}api/folders/create/`,
+            url: `${import.meta.env.VITE_SERVER_URL}api/folders/createe/`,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: {'folder_name': action.payload.folderName, 'user': action.payload.user, parent_folder: action.payload.currentFolder},
@@ -33,7 +33,7 @@ export const editFolderEpic: Epic<RootAction, RootAction, RootState> = (action$)
             withCredentials: true
         }).pipe(
             map(() => setCurrentFolder({folderId: action.payload.currentFolder, filterCount: action.payload.navNumber})),
-            catchError((error) => of(folderError(error.response.message)))
+            catchError((error) =>of(folderError(error.response[0])))
         )
     )
 )
