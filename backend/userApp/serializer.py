@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, ValidationError, CharField
+from rest_framework.serializers import ModelSerializer, ValidationError
 from django.contrib.auth.hashers import make_password
 from .models import Users
 from fileApp.serializer import UsersFilesSerializer
