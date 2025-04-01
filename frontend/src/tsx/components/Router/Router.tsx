@@ -6,6 +6,7 @@ import { Login } from "../Main/Form/Login/Login"
 import { Registration } from "../Main/Form/Registration/Registration"
 import { Provider } from "react-redux"
 import { store } from "../../redux/store/store"
+import { Page404 } from "../Pages/Page404/Page404"
 
 
 export function Router() {
@@ -20,6 +21,7 @@ export function Router() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/registration" element={<Registration />} />
                     </Route>
+                    <Route path="*" element={<Page404 />}/>
                 </Routes>
             </BrowserRouter>
         </Provider>
