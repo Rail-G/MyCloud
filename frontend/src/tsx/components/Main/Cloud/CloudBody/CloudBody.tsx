@@ -45,7 +45,7 @@ export function CloudBody({searchValue}: {searchValue: string}) {
 
     useEffect(() => {
         if (!files.length && !folders.length && userInfo != null) {
-            dispatch(getStorageItems(currentFolder))
+            dispatch(getStorageItems(userInfo!.user_folder))
         }
     }, [])
 

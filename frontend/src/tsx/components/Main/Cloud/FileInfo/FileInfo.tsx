@@ -19,14 +19,14 @@ interface InfoProp {
 }
 
 export function FileInfo({setInfo, setEdit, setShare, setDelete, fileId}: InfoProp) {
-    const {currentFolder} = useAppSelector(state => state.storage)
+    const {currentFolder, curentfolders} = useAppSelector(state => state.storage)
     const {files} = useAppSelector(state => state.storage)
     const file = files.filter(file => file.id == fileId)[0]
     const formatedFileData = formatDate(new Date(file.created))
     const formatedFileSize = formatFileSize(file.size)
     const dispatch = useAppDispatch()
     const onClickToClose = () => setInfo({set: false, fileId: null})
-    const onClickDownload = () => dispatch(downloadFile({id: file.id, fileName: file.file_name, currentFolder: currentFolder!}))
+    const onClickDownload = () => dispatch(downloadFile({id: file.id, fileName: file.file_name, currentFolder: currentFolder!, curentfolders: curentfolders.length - 1}))
     const onClickToChange = () => setEdit({set: true, fileId: file.id, fileExt: file.extensions})
     const onClickToShare = () => {
         dispatch(getShareLink({id: file.id, currentFolder: currentFolder!}))

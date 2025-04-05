@@ -8,7 +8,10 @@ export function Header() {
     const [logoutBtn, setLogoutBtn] = useState(false)
     const onClick = () => setLogoutBtn(prev => !prev)
     const dispatch = useAppDispatch()
-    const onLogoutClick = () => dispatch(logoutUser())
+    const onLogoutClick = () => {
+        dispatch(logoutUser())
+        setLogoutBtn(false)
+    }
     return (
         <header className="bg-gray-200 z-2">
             <div className="container mx-auto flex items-center justify-between">

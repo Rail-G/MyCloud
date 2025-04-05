@@ -9,8 +9,7 @@ import { StorageAjaxResponse, StoragePayloadAction } from "../../../typing";
 export const storageEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
     ofType(getStorageItems.type),
     switchMap((action) => {
-        const path = action.payload != null ? `/api/folders/${action.payload}/` : '/api/folders/'; 
-        const url = `${import.meta.env.VITE_SERVER_URL}${path}`;
+        const url = `${import.meta.env.VITE_SERVER_URL}api/folders/${action.payload}/`;
         return ajax({
             url: url,
             method: 'GET',

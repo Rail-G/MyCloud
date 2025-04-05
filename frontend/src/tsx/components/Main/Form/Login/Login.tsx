@@ -7,8 +7,7 @@ import { FormData } from '../../../../typing'
 import { Link, useNavigate } from 'react-router-dom'
 export function Login() {
     const [data, setData] = useState<FormData>({ username: '', password: '' })
-    const [errorFront, setErrorFront] = useState({ username: false, email: false, password: false })
-    const {userInfo, loading, error, isAuthenticated } = useAppSelector(state => state.form)
+    const {loading, error, isAuthenticated } = useAppSelector(state => state.form)
     const [typing, setTyping] = useState(false)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -27,12 +26,6 @@ export function Login() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setTyping(false)
-        // if (!/^[a-z0-9]{0,75}$/gi.test(data.username)) {
-        //     setErrorFront(prev => ({...prev, username: true}))
-        //     return
-        // }
-        // if (data.email && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/gi.test(data.email))
-        //     setError(prev => ({...prev, email: true}))
         dispatch(getUser(data))
     }
     return (
@@ -57,7 +50,7 @@ export function Login() {
                                     value={data.username}
                                     maxLength={50}
                                     onChange={onChange}
-                                    pattern='^[a-z0-9]{0,75}$'
+                                    pattern='^[a-zA-Z0-9]{0,75}$'
                                     required
                                 />
                             </div>

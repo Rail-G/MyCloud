@@ -1,9 +1,13 @@
 import { Epic, ofType } from "redux-observable";
 import { RootAction, RootState } from "../../store/store";
 import { createUser, createUserError, createUserSuccess, getUser, getUserError, getUserSuccess, logoutUser, logoutUserSuccess } from "../../slice/FormSlice/FormSlice";
-import { catchError, map, of, switchMap, tap } from "rxjs";
+import { catchError, map, mergeMap, of, Subject, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import { UserInfo } from "../../../typing";
+import { logoutUserStorage, setCurrentFolder } from "../../slice/StorageSlice/StorageSlice";
+import { logoutUserAdmin } from "../../slice/AdminSlice/AdminSlice";
+
+export const registrationSubject = new Subject();
 
 export const loginEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
     ofType(getUser.type),
@@ -27,8 +31,14 @@ export const registrationEpic: Epic<RootAction, RootAction, RootState> = (action
         headers: {'Content-Type': 'application/json'},
         body: action.payload,
     }).pipe(
-        map((responseData) => createUserSuccess(responseData.response as UserInfo)),
-        catchError(error => of(createUserError(error.response)))
+        map(() => {
+            registrationSubject.next(true)
+            return createUserSuccess()
+        }),
+        catchError(error => {
+            registrationSubject.next(false)
+            return of(createUserError(error.response))
+        })
     ))
 )
 
@@ -41,7 +51,7 @@ export const logoutEpic: Epic<RootAction, RootAction, RootState> = (action$) => 
             headers: {'Content-Type': 'application/json'},
             withCredentials: true
         }).pipe(
-            map(() => logoutUserSuccess())
+            mergeMap(() => [logoutUserSuccess(), logoutUserStorage(), logoutUserAdmin()])
         )
     )
 )

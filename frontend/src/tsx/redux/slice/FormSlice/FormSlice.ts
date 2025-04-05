@@ -5,7 +5,8 @@ const initialState: FormState = {
     userInfo: null,
     loading: false,
     error: null,
-    isAuthenticated: false
+    isAuthenticated: false,
+    cookie: false
 }
 
 const formSlice = createSlice({
@@ -36,17 +37,19 @@ const formSlice = createSlice({
             state.loading = true;
             state.error = null;
         },
-        createUserSuccess: (state, action: PayloadAction<UserInfo>) => {
+        createUserSuccess: (state) => {
             state.loading = false;
-            state.userInfo = action.payload
         },
         createUserError: (state, action: PayloadAction<FormData>) => {
             state.loading = false;
             state.error = action.payload;
         },
+        setCookie: (state) => {
+            state.cookie = true
+        }
     }
 })
 
-export const {getUser, getUserError, getUserSuccess, createUser, createUserError, createUserSuccess, logoutUser, logoutUserSuccess} = formSlice.actions
+export const {getUser, getUserError, getUserSuccess, createUser, createUserError, createUserSuccess, logoutUser, logoutUserSuccess, setCookie} = formSlice.actions
 export type formAction = ReturnType<typeof formSlice.actions[keyof typeof formSlice.actions]>
 export default formSlice.reducer

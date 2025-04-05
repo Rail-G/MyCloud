@@ -1,10 +1,10 @@
+import { useAppDispatch, useAppSelector } from '../../../hooks'
+import { setCookie } from '../../../redux/slice/FormSlice/FormSlice'
 import './Cookie.css'
 
-interface CookieType {
-    setCookie: React.Dispatch<React.SetStateAction<boolean>>
-}
-export function Cookie({setCookie}: CookieType) {
-    const onClick = () => setCookie(false)
+export function Cookie() {
+    const dispatch = useAppDispatch()
+    const onClick = () => dispatch(setCookie())
     return (
         <section className="cookie-section">
             <div className="container ms-auto flex justify-center items-center text-white gap-15 px-10">

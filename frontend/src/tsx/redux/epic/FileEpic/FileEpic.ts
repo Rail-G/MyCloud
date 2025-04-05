@@ -39,7 +39,7 @@ export const downloadFileEpic: Epic<RootAction, RootAction, RootState> = (action
                 a.click();
                 console.log(a)
                 a.remove();
-                return [fileSuccess(null), getStorageItems(action.payload.currentFolder)]
+                return [fileSuccess(null), setCurrentFolder({folderId: action.payload.currentFolder, filterCount: action.payload.curentfolders})]
             }),
             catchError(error => of(fileError(error.response)))
         )
@@ -69,7 +69,7 @@ export const changeFileEpic: Epic<RootAction, RootAction, RootState> = (action$)
             body: {id: action.payload.id, file_name: action.payload.fileName, user: action.payload.user, folder: action.payload.folder, comment: action.payload.comment},
             withCredentials: true
         }).pipe(
-            mergeMap((responseData) => [fileSuccess(responseData.response as null), getStorageItems(action.payload.folder)]),
+            mergeMap((responseData) => [fileSuccess(responseData.response as null), setCurrentFolder({folderId: action.payload.folder, filterCount: action.payload.curentFolders})]),
             catchError(error => of(fileError(error.response[0])))
         )
     )

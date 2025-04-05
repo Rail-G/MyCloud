@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks'
 import { Link, useNavigate } from 'react-router-dom'
 import { createUser } from '../../../../redux/slice/FormSlice/FormSlice'
 import { Loader } from '../../Loader/Loader'
+import { registrationSubject } from '../../../../redux/epic/FormEpic/FormEpic'
 export function Registration() {
     const [data, setData] = useState({ username: '', email: '', password: '', confirmPassword: '' })
     const [errorFront, setErrorFront] = useState({ username: false, email: false, password: false })
@@ -28,10 +29,6 @@ export function Registration() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setTyping(false)
-        if (!/^[a-z0-9]{0,75}$/gi.test(data.username)) {
-            setErrorFront(prev => ({ ...prev, username: true }))
-            return
-        }
         if (data.email && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/gi.test(data.email)) {
             setErrorFront(prev => ({ ...prev, email: true }))
             return
@@ -41,6 +38,12 @@ export function Registration() {
             return
         }
         dispatch(createUser(data))
+        const subscription  = registrationSubject.subscribe(success => {
+            if (success) {
+                navigate('/login')
+            }
+        })
+        return () => subscription.unsubscribe();
     }
 
     return (
@@ -63,6 +66,7 @@ export function Registration() {
                                         name="username"
                                         className="reg-form-input"
                                         placeholder="Введите имя пользователя"
+                                        maxLength={50}
                                         value={data.username}
                                         onChange={onChange}
                                         required

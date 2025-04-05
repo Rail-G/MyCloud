@@ -10,7 +10,7 @@ export const addFolderEpic: Epic<RootAction, RootAction, RootState> = (action$) 
     ofType(addFolder.type),
     switchMap((action) => 
         ajax({
-            url: `${import.meta.env.VITE_SERVER_URL}api/folders/createe/`,
+            url: `${import.meta.env.VITE_SERVER_URL}api/folders/create/`,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: {'folder_name': action.payload.folderName, 'user': action.payload.user, parent_folder: action.payload.currentFolder},

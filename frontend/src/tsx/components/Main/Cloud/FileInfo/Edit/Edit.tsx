@@ -13,7 +13,7 @@ interface EditProp {
 }
 
 export function Edit({setEdit, fileId, fileExt}: EditProp) {
-    const {currentFolder} = useAppSelector(state => state.storage)
+    const {currentFolder, curentfolders} = useAppSelector(state => state.storage)
     const {userInfo} = useAppSelector(state => state.form)
     const [value, setValue] = useState({fileName: '', comment: ''})
     const dispatch = useAppDispatch()
@@ -32,6 +32,7 @@ export function Edit({setEdit, fileId, fileExt}: EditProp) {
                 user: userInfo!.id,
                 comment: value.comment,
                 folder: currentFolder!,
+                curentFolders: curentfolders.length - 1
             }
         ))
         setEdit({set: false, fileId: null, fileExt: ''})

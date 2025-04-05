@@ -20,13 +20,3 @@ class FolderView(ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return UsersFolderDetailSerializer
         return UsersFolderSerializer
-
-    def list(self, request, *args, **kwargs):
-        if (request.user.is_staff):
-            user_files = UsersFolders.objects.filter(parent_folder=None)
-            serializer = self.get_serializer(user_files, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            user_files = request.user.folders.get(folder_name=f'{request.user.username}_{request.user.id}', parent_folder=None)
-            serializer = self.get_serializer(user_files, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)

@@ -5,10 +5,9 @@ import { useAppSelector } from "../../hooks";
 import { Notification } from "./Notification/Notification";
 
 export function Main({children}: {children: ReactNode}): JSX.Element {
-    const {userInfo, isAuthenticated} = useAppSelector(state => state.form)
+    const {userInfo, isAuthenticated, cookie} = useAppSelector(state => state.form)
     const {error: fileError} = useAppSelector(state => state.file)
     const {error: folderError} = useAppSelector(state => state.folder)
-    const [cookies, setCookies] = useState(true)
 
     return (
         <main className="flex-grow bg-gray-100">
@@ -17,7 +16,7 @@ export function Main({children}: {children: ReactNode}): JSX.Element {
                 {(fileError || folderError) && <Notification operationType={false} text={fileError! || folderError!}/>}
                 {children}
             </div>
-            {(document.cookie.length > 0 && userInfo && cookies) && <Cookie setCookie={setCookies} />}
+            {(document.cookie.length > 0 && userInfo && cookie) && <Cookie />}
         </main>
     )
 }
