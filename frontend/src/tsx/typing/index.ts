@@ -16,6 +16,7 @@ export interface UserInfo {
     username: string,
     email: string,
     is_staff: boolean,
+    is_superuser: boolean,
     user_folder: number,
 }
 
@@ -23,7 +24,8 @@ export interface FormState {
     userInfo: null | UserInfo,
     loading: boolean,
     error: null | ErrorFormData,
-    isAuthenticated: boolean
+    isAuthenticated: boolean,
+    cookie: boolean
 }
 
 export interface StorageFile{
@@ -89,7 +91,8 @@ export interface RetrieveFile {
 export interface DownloadFile {
     id: number,
     fileName: string,
-    currentFolder: number
+    currentFolder: number,
+    curentfolders: number
 }
 
 export interface PathFile {
@@ -97,7 +100,8 @@ export interface PathFile {
     fileName: string,
     user: number,
     folder: number,
-    comment: string, 
+    comment: string,
+    curentFolders: number
 }
 
 export interface SearchTool {
@@ -108,4 +112,29 @@ export interface SearchTool {
 export interface NotificationType {
     operationType: boolean,
     text: string
+}
+
+export interface AdminUser extends UserInfo {
+    is_active: boolean,
+    files: number,
+    folders: number,
+    file_size: number,
+    main_folder: number | null
+}
+
+export interface AdminSlice {
+    users: AdminUser[],
+    userFiles: [],
+    currentUser: AdminUser | null,
+    currentUserFolder: number,
+    page: number,
+    param: string,
+    loading: boolean,
+    error: string | null
+}
+
+export interface AdminEdit {
+    id: number,
+    is_staff: boolean,
+    username: string
 }
