@@ -3,7 +3,8 @@ import { RootAction, RootState } from "../../store/store";
 import { addFolder, deleteFolder, editFolder, folderError } from "../../slice/FolderSlice/FolderSlice";
 import { catchError, map, of, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
-import { getStorageItems, setCurrentFolder } from "../../slice/StorageSlice/StorageSlice";
+import { setCurrentFolder } from "../../slice/StorageSlice/StorageSlice";
+import { setCurrentFolderAdmin } from "../../slice/AdminSlice/AdminSlice";
 
 
 export const addFolderEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe (
@@ -32,7 +33,12 @@ export const editFolderEpic: Epic<RootAction, RootAction, RootState> = (action$)
             body: {'folder_name': action.payload.folderName},
             withCredentials: true
         }).pipe(
-            map(() => setCurrentFolder({folderId: action.payload.currentFolder, filterCount: action.payload.navNumber})),
+            map(() => {
+                if (action.payload.admin) {
+                    return setCurrentFolderAdmin({folderId: action.payload.currentFolder, filterCount: action.payload.navNumber})
+                }
+                return setCurrentFolder({folderId: action.payload.currentFolder, filterCount: action.payload.navNumber})
+            }),
             catchError((error) =>of(folderError(error.response[0])))
         )
     )
@@ -47,7 +53,12 @@ export const deleteFolderEpic: Epic<RootAction, RootAction, RootState> = (action
             headers: {'Content-Type': 'application/json'},
             withCredentials: true
         }).pipe(
-            map(() => setCurrentFolder({folderId: action.payload.previewFolder, filterCount: null})),
+            map(() => {
+                if (action.payload.admin) {
+                    return setCurrentFolderAdmin({folderId: action.payload.previewFolder, filterCount: null})
+                }
+                return setCurrentFolder({folderId: action.payload.previewFolder, filterCount: null})
+            }),
             catchError((error) => of(folderError(error.response.message)))
         )
     )

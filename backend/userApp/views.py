@@ -13,7 +13,7 @@ from rest_framework import status
 
 
 class UsersPagination(PageNumberPagination):
-    page_size = 5
+    page_size = 10
 
 
 class UserView(ModelViewSet):
@@ -73,8 +73,6 @@ class UserLoginView(ModelViewSet):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         new_user = serializer.save()
-        
-        token = Token.objects.create(user=new_user)
 
         return Response({}, status=status.HTTP_201_CREATED)
 

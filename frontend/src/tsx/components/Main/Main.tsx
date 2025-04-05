@@ -16,7 +16,7 @@ export function Main({children}: {children: ReactNode}): JSX.Element {
                 {(fileError || folderError) && <Notification operationType={false} text={fileError! || folderError!}/>}
                 {children}
             </div>
-            {(document.cookie.length > 0 && userInfo && cookie) && <Cookie />}
+            {!cookie && <Cookie />}
         </main>
     )
 }

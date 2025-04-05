@@ -32,7 +32,8 @@ export function Edit({setEdit, fileId, fileExt}: EditProp) {
                 user: userInfo!.id,
                 comment: value.comment,
                 folder: currentFolder!,
-                curentFolders: curentfolders.length - 1
+                curentFolders: curentfolders.length - 1,
+                admin: false
             }
         ))
         setEdit({set: false, fileId: null, fileExt: ''})

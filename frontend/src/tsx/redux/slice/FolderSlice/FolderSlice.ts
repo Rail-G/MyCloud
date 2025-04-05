@@ -1,28 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FolderState } from "../../../typing";
+import { CreateFolder, DeleteFolder, EditFolder, FolderState } from "../../../typing";
 
 const initialState: FolderState = {
     loading: false,
     error: null
-}
-
-interface CreateFolder {
-    folderName: string,
-    user: number,
-    currentFolder: number,
-    navNumber: number
-}
-
-interface EditFolder {
-    id: number,
-    folderName: string,
-    currentFolder: number,
-    navNumber: number
-}
-
-interface DeleteFolder {
-    id: number,
-    previewFolder: number
 }
 
 const folderSlice = createSlice({

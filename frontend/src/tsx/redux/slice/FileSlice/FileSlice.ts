@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DownloadFile, FileState, PathFile, RetrieveFile } from "../../../typing";
+import { DeleteFile, DownloadFile, FileState, PathFile, RetrieveFile } from "../../../typing";
 import { addFileThunk } from "../../thunk/addFileThunk";
 
 const initialState: FileState = {
@@ -13,7 +13,7 @@ const fileSlice = createSlice({
     name: 'fileSlice',
     initialState,
     reducers: {
-        deleteFile: (state, _action: PayloadAction<RetrieveFile>) => {
+        deleteFile: (state, _action: PayloadAction<DeleteFile>) => {
             state.loading = true;
             state.error = null;
         },

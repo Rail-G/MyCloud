@@ -5,15 +5,14 @@ interface FileProps {
     file: StorageFile,
     setInfo: React.Dispatch<React.SetStateAction<{
         set: boolean;
-        fileId: number | null;
+        file: StorageFile | null;
     }>>
 }
 
 export function File({file, setInfo}: FileProps) {
     const onClick = () => {
-        setInfo(() => ({set: true, fileId: file.id}))
+        setInfo(() => ({set: true, file: file}))
     }
-    const formatedFileData = formatDate(new Date(file.created))
     return (
         <div onClick={onClick} className="bg-white hover:shadow-md cursor-pointer px-5 py-5 flex justify-center flex-col h-full w-full">
             <div className="relative mb-2">

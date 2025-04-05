@@ -8,12 +8,17 @@ interface AddFolderType {
 
 export function CreateFolder({folderState, onConfirm}: AddFolderType) {
     const [value, setValue] = useState('')
+    const [error, setError] = useState(false)
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)
     const onClickToCloseFolder = () => folderState(false)
     const onSubmit = (e: React.FormEvent, value: string) => {
         e.preventDefault()
+        if (value.length > 25) {
+            setError(true)
+        }
         folderState(false)
         onConfirm(value)
+        setError(false)
     }
     return (
         <>
@@ -27,12 +32,15 @@ export function CreateFolder({folderState, onConfirm}: AddFolderType) {
                     <h2 className='text-2xl font-bold text-center mb-8 text-(--color-haze)'>Что хотите изменить?</h2>
                     <form onSubmit={(e) => onSubmit(e, value)} className='space-y-4' noValidate>
                         <div>
-                            <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >Название папки</label>
+                            <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >
+                                <span>Название папки</span>
+                                {error && <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">Не более 25 символов</p>}
+                                </label>
                             <input className='tool-input' onChange={onChange} value={value} type="text" id="tool-name" placeholder='Введите название' />
                         </div>
                         <div>
                             <button type="submit" className='tool-submit-btn'>
-                                Создать
+                                Выполнить
                             </button>
                         </div>
                     </form>

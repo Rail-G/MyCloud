@@ -13,9 +13,10 @@ import { deleteFile } from '../../../../redux/slice/FileSlice/FileSlice'
 import { EmptyStorage } from './EmptyStorage/EmptyStorage'
 import { useNavigate } from 'react-router-dom'
 import { ErrorStorage } from './ErrorStorage/ErrorStorage'
+import { StorageFile } from '../../../../typing'
 
 export function CloudBody({searchValue}: {searchValue: string}) {
-    const [info, setInfo] = useState<{ set: boolean, fileId: number | null }>({ set: false, fileId: null })
+    const [info, setInfo] = useState<{ set: boolean, file: StorageFile | null }>({ set: false, file: null })
     const [edit, setEdit] = useState<{ set: boolean, fileId: number | null, fileExt: string }>({ set: false, fileId: null, fileExt: ''})
     const [share, setShare] = useState(false)
     const [delFile, setDeFile] = useState(false)
@@ -31,11 +32,15 @@ export function CloudBody({searchValue}: {searchValue: string}) {
         dispatch(setCurrentFolder({folderId: folderId, filterCount: [...curentfolders].findIndex(folder => folder.id == folderId)}))
     }
     const onClickToConfirm = () => {
-        dispatch(deleteFile({id: info.fileId!, currentFolder: currentFolder!}))
-        setInfo({set: false, fileId: null})
+        dispatch(deleteFile({id: info.file!.id, currentFolder: currentFolder!, admin: false}))
+        setInfo({set: false, file: null})
     }
 
     const onClickToError = () => dispatch(getStorageItems(currentFolder != null ? currentFolder : userInfo!.user_folder))
+
+    const onClickToFolder = (id: number) => {
+        dispatch(setCurrentFolder({folderId: id, filterCount: curentfolders.length}))
+    }
 
     useEffect(() => {
         if (userInfo == null) {
@@ -57,7 +62,7 @@ export function CloudBody({searchValue}: {searchValue: string}) {
     return (
         <>
             {loading && <Loader />}
-            {info.set && <FileInfo setInfo={setInfo} setEdit={setEdit} setShare={setShare} setDelete={setDeFile} fileId={info.fileId} />}
+            {info.set && <FileInfo setInfo={setInfo} setEdit={setEdit} setShare={setShare} setDelete={setDeFile} file={info.file} />}
             {edit.set && <Edit setEdit={setEdit} fileId={edit.fileId!} fileExt={edit.fileExt}/>}
             {share && <ShareLink setShare={setShare}/>}
             {delFile && <Warning state={setDeFile} onConfirm={onClickToConfirm}/>}
@@ -66,7 +71,7 @@ export function CloudBody({searchValue}: {searchValue: string}) {
                 <div className='w-full mb-2.5'>
                     <ul className='list-none flex flex-wrap'>
                         {curentfolders.map((folder) => (
-                            <li onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
+                            <li key={folder.id} onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
                                 {`${folder.folder_name}  >  `}
                             </li>
                         ))}
@@ -79,7 +84,7 @@ export function CloudBody({searchValue}: {searchValue: string}) {
                         <ul className='list-none grid grid-cols-[repeat(6,183.5px)] auto-rows-[240px] gap-5 h-full'>
                             {folders.filter(el => el.folder_name.toLowerCase().includes(searchValue.toLowerCase())).map(folder => (
                                 <li key={`folder_${folder.id}`}>
-                                    <Folder id={folder.id} folder_name={folder.folder_name} />
+                                    <Folder id={folder.id} folder_name={folder.folder_name} onClickToFolder={onClickToFolder} />
                                 </li>
                             ))}
                             {files.filter(el => el.file_name.toLowerCase().includes(searchValue.toLowerCase())).map(file => (
@@ -90,57 +95,6 @@ export function CloudBody({searchValue}: {searchValue: string}) {
                         </ul>
                     </div>
                 </div>}
-                {/* <div className="p-2 border-t dark:border-gray-700  w-full">
-                    <nav role="navigation" aria-label="Pagination Navigation" className="flex items-center">
-
-                        <div className="flex items-center justify-between w-full">
-                            <div className="flex items-center">
-                                <div className="pl-2 text-sm font-medium dark:text-white">
-                                    Showing 11 to 20 of 99 results
-                                    {`Показано от ${[...files, ...folders].length} до ${[...files, ...folders].length} из ${[...files, ...folders].length}`}
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-end">
-                                <div className="py-3 border rounded-lg dark:border-gray-600">
-                                    <ol
-                                        className="flex items-center text-sm text-gray-500 divide-x rtl:divide-x-reverse divide-gray-300 dark:text-gray-400 dark:divide-gray-600">
-                                        <li>
-                                            <button type="button"
-                                                className="relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-yellow-500/10 focus:ring-2 focus:ring-yellow-500 dark:hover:bg-gray-400/5 transition text-yellow-600"
-                                                aria-label="Previous" rel="prev">
-                                                <svg className="w-5 h-5 rtl:scale-x-[-1]" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path fill-rule="evenodd"
-                                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <label htmlFor='pagination' className='relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-yellow-500/10 focus:ring-2 focus:ring-yellow-500 dark:hover:bg-gray-400/5 focus:text-yellow-600 transition'>
-                                                <input className='w-[0.6rem] z-1' id='pagination' type="text" />
-                                                <span className="absolute left-[50%] -translate-x-[50%]">...</span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <button type="button"
-                                                className="relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-yellow-500/10 focus:ring-2 focus:ring-yellow-500 dark:hover:bg-gray-400/5 transition text-yellow-600"
-                                                aria-label="Next" rel="next">
-                                                <svg className="w-5 h-5 rtl:scale-x-[-1]" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path fill-rule="evenodd"
-                                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                            </button>
-                                        </li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-                </div> */}
             </section>}
         </>
     )

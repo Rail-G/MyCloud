@@ -39,7 +39,7 @@ export function Header() {
                 <div className='border-l-1 border-black p-0'>
                     {userInfo != null
                     ? <div className='py-[10px] px-4 flex justify-center gap-x-15 items-center relative'>
-                        <img className='w-[35px] h-[35px] block' src="src/img/171.png" alt="" />
+                        <img className='w-[35px] h-[35px] block' src="src/img/default.png" alt="" />
                         <span className='ml-[-40px] text-base'>{userInfo.username}</span>
                         <div>
                             <button onClick={onClick} className='user-dropdown-btn'></button>

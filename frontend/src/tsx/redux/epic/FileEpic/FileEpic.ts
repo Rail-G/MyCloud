@@ -5,6 +5,7 @@ import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import { StorageFile } from "../../../typing";
 import { getStorageItems, setCurrentFolder } from "../../slice/StorageSlice/StorageSlice";
+import { setCurrentFolderAdmin } from "../../slice/AdminSlice/AdminSlice";
 
 export const deleteFileEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
     ofType(deleteFile.type),
@@ -14,7 +15,12 @@ export const deleteFileEpic: Epic<RootAction, RootAction, RootState> = (action$)
             headers: {'Content-Type': 'application/json'},
             withCredentials: true
         }).pipe(
-            mergeMap(() => [setCurrentFolder({folderId: action.payload.currentFolder, filterCount: null})]),
+            map(() => {
+                if (action.payload.admin) {
+                    return setCurrentFolderAdmin({folderId: action.payload.currentFolder, filterCount: null})
+                } 
+                return setCurrentFolder({folderId: action.payload.currentFolder, filterCount: null})
+            }),
             catchError(error => of(fileError(error.response)))
         )
     )
@@ -39,7 +45,7 @@ export const downloadFileEpic: Epic<RootAction, RootAction, RootState> = (action
                 a.click();
                 console.log(a)
                 a.remove();
-                return [fileSuccess(null), setCurrentFolder({folderId: action.payload.currentFolder, filterCount: action.payload.curentfolders})]
+                return [fileSuccess(null)]
             }),
             catchError(error => of(fileError(error.response)))
         )
@@ -69,13 +75,18 @@ export const changeFileEpic: Epic<RootAction, RootAction, RootState> = (action$)
             body: {id: action.payload.id, file_name: action.payload.fileName, user: action.payload.user, folder: action.payload.folder, comment: action.payload.comment},
             withCredentials: true
         }).pipe(
-            mergeMap((responseData) => [fileSuccess(responseData.response as null), setCurrentFolder({folderId: action.payload.folder, filterCount: action.payload.curentFolders})]),
+            mergeMap((responseData) => {
+                if (action.payload.admin) {
+                    return [fileSuccess(responseData.response as null), setCurrentFolderAdmin({folderId: action.payload.folder, filterCount: action.payload.curentFolders})]
+                }
+                return [fileSuccess(responseData.response as null), setCurrentFolder({folderId: action.payload.folder, filterCount: action.payload.curentFolders})]
+            }),
             catchError(error => of(fileError(error.response[0])))
         )
     )
 )
 
-// export const setFolderEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
+// export const addFileEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
 //     ofType('file/upload/fulfilled'),
 //     map((action) => getStorageItems(action))
 // )

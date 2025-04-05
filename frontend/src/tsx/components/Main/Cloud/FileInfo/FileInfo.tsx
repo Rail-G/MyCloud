@@ -1,12 +1,13 @@
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { deleteFile, downloadFile, getShareLink } from '../../../../redux/slice/FileSlice/FileSlice';
+import { StorageFile } from '../../../../typing';
 import { formatDate, formatFileSize } from '../../../../utils';
 import './FileInfo.css'
 
 interface InfoProp {
     setInfo: React.Dispatch<React.SetStateAction<{
         set: boolean;
-        fileId: number | null;
+        file: StorageFile | null;
     }>>,
     setEdit: React.Dispatch<React.SetStateAction<{
         set: boolean;
@@ -15,21 +16,21 @@ interface InfoProp {
     }>>,
     setShare: React.Dispatch<React.SetStateAction<boolean>>,
     setDelete: React.Dispatch<React.SetStateAction<boolean>>,
-    fileId: number | null;
+    file: StorageFile | null;
 }
 
-export function FileInfo({setInfo, setEdit, setShare, setDelete, fileId}: InfoProp) {
-    const {currentFolder, curentfolders} = useAppSelector(state => state.storage)
-    const {files} = useAppSelector(state => state.storage)
-    const file = files.filter(file => file.id == fileId)[0]
-    const formatedFileData = formatDate(new Date(file.created))
-    const formatedFileSize = formatFileSize(file.size)
+export function FileInfo({setInfo, setEdit, setShare, setDelete, file}: InfoProp) {
+    // const {currentFolder, curentfolders} = useAppSelector(state => state.storage)
+    // const {files} = useAppSelector(state => state.storage)
+    // const file = files.filter(file => file.id == fileId)[0]
+    const formatedFileData = formatDate(new Date(file!.created))
+    const formatedFileSize = formatFileSize(file!.size)
     const dispatch = useAppDispatch()
-    const onClickToClose = () => setInfo({set: false, fileId: null})
-    const onClickDownload = () => dispatch(downloadFile({id: file.id, fileName: file.file_name, currentFolder: currentFolder!, curentfolders: curentfolders.length - 1}))
-    const onClickToChange = () => setEdit({set: true, fileId: file.id, fileExt: file.extensions})
+    const onClickToClose = () => setInfo({set: false, file: null})
+    const onClickDownload = () => dispatch(downloadFile({id: file!.id, fileName: file!.file_name}))
+    const onClickToChange = () => setEdit({set: true, fileId: file!.id, fileExt: file!.extensions})
     const onClickToShare = () => {
-        dispatch(getShareLink({id: file.id, currentFolder: currentFolder!}))
+        dispatch(getShareLink({id: file!.id}))
         setShare(true)
     }
     const onClickToDelete = () => {
@@ -44,7 +45,7 @@ export function FileInfo({setInfo, setEdit, setShare, setDelete, fileId}: InfoPr
                         <div className="file-info">
                             <div className="text-[13px]">
                                 <span>Имя: </span>
-                                <span className="font-medium">{file.file_name}</span>
+                                <span className="font-medium">{file!.file_name}</span>
                             </div>
                             <div className="text-[13px]">
                                 <span>Размер: </span>
@@ -57,7 +58,7 @@ export function FileInfo({setInfo, setEdit, setShare, setDelete, fileId}: InfoPr
                         </div>
                     </button>
                     <div className="h-full flex items-center">
-                        <span className="text-[18px] text-white flex self-center">{file.file_name}</span>
+                        <span className="text-[18px] text-white flex self-center">{file!.file_name}</span>
                     </div>
                 </div>
                 <div className="flex grow flex-row gap-8 justify-end">

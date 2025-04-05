@@ -2,7 +2,7 @@
 interface ErrorStorageType {
     onConfirm: () => {
         payload: number | null;
-        type: "storageSlice/getStorageItems";
+        type: "storageSlice/getStorageItems" | "adminSlice/getUserItems";
     }
 }
 export function ErrorStorage({onConfirm}: ErrorStorageType) {
