@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+.tr-th {
+    @apply px-6 py-3  text-xs font-medium text-white uppercase tracking-wider text-center bg-(--color-haze-600)
+}

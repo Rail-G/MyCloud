@@ -2,8 +2,8 @@ import { combineEpics } from "redux-observable";
 import { loginEpic, logoutEpic, registrationEpic } from "./FormEpic/FormEpic";
 import { setFolderEpic, storageEpic } from "./StorageEpic/StorageEpic";
 import { deleteFileEpic, shareFileEpic, changeFileEpic, downloadFileEpic } from "./FileEpic/FileEpic";
-import { addFolder } from "../slice/FolderSlice/FolderSlice";
 import { addFolderEpic, deleteFolderEpic, editFolderEpic } from "./FolderEpic/FolderEpic";
+import { adminGetEpic, adminDeleteEpic, adminEditEpic } from "./AdminEpic/AdminEpic";
 
 export const combinedEpic = combineEpics(
     loginEpic,
@@ -17,5 +17,8 @@ export const combinedEpic = combineEpics(
     downloadFileEpic,
     addFolderEpic,
     editFolderEpic,
-    deleteFolderEpic
+    deleteFolderEpic,
+    adminGetEpic,
+    adminDeleteEpic,
+    adminEditEpic
 )

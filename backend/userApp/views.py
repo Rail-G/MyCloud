@@ -6,12 +6,19 @@ from .models import Users
 from .serializer import UserSerializer, AdminSerializer
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from rest_framework.pagination import PageNumberPagination
 from django.middleware.csrf import get_token
 from rest_framework.response import Response
 from rest_framework import status
 
+
+class UsersPagination(PageNumberPagination):
+    page_size = 5
+
+
 class UserView(ModelViewSet):
     queryset = Users.objects.all()
+    pagination_class = UsersPagination
 
     def get_permissions(self):
         if self.action in ['list', 'destroy']:
@@ -25,6 +32,13 @@ class UserView(ModelViewSet):
             return AdminSerializer
         return UserSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        username = self.request.query_params.get('username', None)
+        if username:
+            queryset = queryset.filter(username__icontains=username)
+        return queryset.order_by('id')
+
     def create(self, request):
         return Response({'detail': 'Метод POST запрещен'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
@@ -36,15 +50,18 @@ class UserLoginView(ModelViewSet):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(request, username=username, password=password)
+        serializer = UserSerializer(user)
+        serializedUser = serializer.data
         if user is not None:
             token = Token.objects.get_or_create(user=user)
 
             csrf = get_token(request)
 
             response = Response({
-                'id': user.id, 'username': user.username, 'is_staff': user.is_staff, "user_folder": user.folders.all().values('id')[0].get('id')
+                'id': serializedUser['id'], 'username': serializedUser['username'], 'is_staff': serializedUser['is_staff'], 'is_superuser': serializedUser['is_superuser'], "user_folder": serializedUser['user_folder']
                 }, status=status.HTTP_200_OK)
             login(request, user)
+            print("Session data after login:", request.session.items(), request.user)
             response.set_cookie(key='a_t', value=token[0].key, httponly=True, secure=True, samesite='None')
             response.set_cookie(key='csrf', value=csrf, httponly=True, secure=True, samesite='None')
 
@@ -59,17 +76,20 @@ class UserLoginView(ModelViewSet):
         
         token = Token.objects.create(user=new_user)
 
-        return Response({
-            'message': 'Вы успешно зарегистрировали аккаунт'
-        }, status=status.HTTP_201_CREATED)
+        return Response({}, status=status.HTTP_201_CREATED)
 
     def user_logout(self, request, *args, **kwargs):
         user_token = Token.objects.filter(key=request.COOKIES.get('a_t'))
         if user_token.exists():
+            print("Session data after login:", request.session.items(), request.user)
+            logout(request)
+            print("Session data after login:", request.session.items(), request.user)
             user_token.delete()
+            request.session.flush()
             response = Response({"message": 'Вы успешно вышли из аккаунта'}, status=status.HTTP_204_NO_CONTENT)
             response.delete_cookie('a_t')
             response.delete_cookie('csrf')
-            logout(request)
+            response.delete_cookie('csrftoken')
+            response.delete_cookie('sessionid')
             return response
         return Response({'error': 'Не валидный токен'}, status=status.HTTP_403_FORBIDDEN)
