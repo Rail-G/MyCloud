@@ -65,7 +65,9 @@ export function SearchBody() {
                     </thead>
                     {!loading && <tbody className="bg-white divide-y divide-gray-200">
                         {users.map(user => 
-                            <TableRow onClickToEdit={onClickToEdit} user={user} setDelUser={setDelUser} setDelUserId={setDelUserId}/>
+                            <tr key={user.id}>
+                                <TableRow onClickToEdit={onClickToEdit} user={user} setDelUser={setDelUser} setDelUserId={setDelUserId}/>
+                            </tr>
                         )}
                     </tbody>}
                 </table>

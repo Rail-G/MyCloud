@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../../../../../hooks'
-import { deleteUser } from '../../../../../redux/slice/AdminSlice/AdminSlice'
+import { setUser } from '../../../../../redux/slice/AdminSlice/AdminSlice'
 import { AdminUser } from '../../../../../typing'
 import { formatFileSize } from '../../../../../utils'
 import './TableRow.css'
@@ -13,6 +13,7 @@ interface TableRowType {
 
 export function TableRow({onClickToEdit, user, setDelUser, setDelUserId}: TableRowType) {
     const {userInfo} = useAppSelector(state => state.form)
+    const dispatch = useAppDispatch()
     let role = 'Пользователь'
     if (user.is_superuser) {
         role = 'Главный администратор'
@@ -20,12 +21,14 @@ export function TableRow({onClickToEdit, user, setDelUser, setDelUserId}: TableR
         role = 'Администратор'
     }
     const totalSize = formatFileSize(user.file_size)
+
+    const onClickToSetUser = (user: AdminUser) => dispatch(setUser(user))
     const onDelete = () => {
         setDelUser(true)
         setDelUserId(user.id)
     }
     return (
-        <tr>
+        <>
             <td className="px-6 py-3.5 whitespace-nowrap">
                 <div className="flex items-center">
                     <div className="ml-4">
@@ -56,10 +59,10 @@ export function TableRow({onClickToEdit, user, setDelUser, setDelUserId}: TableR
                 {totalSize}
             </td>
             <td className="px-6 py-4 whitespace-nowrap  text-sm font-medium">
-                {((userInfo?.is_superuser && userInfo?.id != user.id) || (userInfo?.is_staff && !user.is_superuser && !user.is_staff)) && <button className="tr-td-action-submit">Хранилище</button>}
+                {((userInfo?.is_superuser && userInfo?.id != user.id) || (userInfo?.is_staff && !user.is_superuser && !user.is_staff)) && <button onClick={() => onClickToSetUser(user)} className="tr-td-action-submit">Хранилище</button>}
                 {((userInfo?.is_superuser && userInfo?.id != user.id) || (userInfo?.is_staff && !user.is_superuser && !user.is_staff)) && <button onClick={() => onClickToEdit(user.id, user.username, user.is_staff)} className="tr-td-action-edit">Изменить</button>}
                 {((userInfo?.is_superuser && userInfo?.id != user.id) || (userInfo?.is_staff && !user.is_superuser && !user.is_staff)) && <button onClick={onDelete} className="tr-td-action-delete">Удалить</button>}
             </td>
-        </tr>
+        </>
     )
 }

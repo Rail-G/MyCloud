@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AdminEdit, AdminSlice, AdminUser, UserInfo } from "../../../typing"
+import { AdminEdit, AdminSlice, AdminUser, StoragePayloadAction, UserInfo } from "../../../typing"
 
 const initialState: AdminSlice = {
     users: [],
     userFiles: [],
+    userFolders: [],
+    currentFolders: [],
     currentUser: null,
-    currentUserFolder: 0,
+    currentUserFolder: null,
     page: 1,
     param: '',
     loading: false,
@@ -26,6 +28,9 @@ const adminSlice = createSlice({
             state.loading = true;
             state.error = null
         },
+        setUser: (state, action: PayloadAction<AdminUser>) => {
+            state.currentUser = action.payload
+        },
         deleteUser: (state, _action: PayloadAction<{id: number}>) => {
             state.loading = true;
             state.error = null
@@ -38,6 +43,26 @@ const adminSlice = createSlice({
             state.loading = false
             state.error = action.payload
         },
+        getUserItems: (state, _action: PayloadAction<number | null>) => {
+            state.loading = true;
+            state.error = null;
+        },
+        getUserItemsSuccess: (state, action: PayloadAction<StoragePayloadAction>) => {
+            state.loading = false;
+            state.userFiles = action.payload.files;
+            state.userFolders = action.payload.folders;
+            state.currentUserFolder = action.payload.id;
+            state.currentFolders = [...state.currentFolders, action.payload.curentfolders];
+        },
+        setCurrentFolderAdmin: (state, action: PayloadAction<{folderId: number | null, filterCount: number | null}>) => {
+            state.currentFolders = state.currentFolders.splice(0, action.payload.filterCount != null ? action.payload.filterCount : state.currentFolders.length - 2)
+            state.currentUserFolder = action.payload.folderId
+        },
+        backToTable: (state) => {
+            state.userFiles = [],
+            state.userFolders = [],
+            state.currentUser = null
+        },
         logoutUserAdmin: (state) => {
             state.users = []
             state.userFiles = []
@@ -49,6 +74,6 @@ const adminSlice = createSlice({
     }
 })
 
-export const {getUsers, adminSuccess, adminError, editUser, deleteUser, logoutUserAdmin} = adminSlice.actions
+export const {getUsers, adminSuccess, adminError, editUser, deleteUser,getUserItems, getUserItemsSuccess, setCurrentFolderAdmin, backToTable, logoutUserAdmin, setUser} = adminSlice.actions
 export type adminAction = ReturnType<typeof adminSlice.actions[keyof typeof adminSlice.actions]>
 export default adminSlice.reducer

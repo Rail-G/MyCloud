@@ -43,7 +43,8 @@ export interface StorageFile{
 
 export interface StorageFolder {
     id: number,
-    folder_name: string
+    folder_name: string,
+    onClickToFolder: (id: number) => void
 }
 
 export interface StoragePayloadAction {
@@ -83,16 +84,19 @@ export interface FolderState {
     error: string | null
 }
 
+export interface DeleteFile {
+    id: number, 
+    currentFolder: number,
+    admin: boolean
+}
+
 export interface RetrieveFile {
     id: number, 
-    currentFolder: number
 }
 
 export interface DownloadFile {
     id: number,
-    fileName: string,
-    currentFolder: number,
-    curentfolders: number
+    fileName: string
 }
 
 export interface PathFile {
@@ -101,7 +105,29 @@ export interface PathFile {
     user: number,
     folder: number,
     comment: string,
-    curentFolders: number
+    curentFolders: number,
+    admin: boolean
+}
+
+export interface CreateFolder {
+    folderName: string,
+    user: number,
+    currentFolder: number,
+    navNumber: number
+}
+
+export interface EditFolder {
+    id: number,
+    folderName: string,
+    currentFolder: number,
+    navNumber: number,
+    admin: boolean
+}
+
+export interface DeleteFolder {
+    id: number,
+    previewFolder: number,
+    admin: boolean
 }
 
 export interface SearchTool {
@@ -114,7 +140,12 @@ export interface NotificationType {
     text: string
 }
 
-export interface AdminUser extends UserInfo {
+export interface AdminUser {
+    id: number,
+    username: string,
+    email: string,
+    is_staff: boolean,
+    is_superuser: boolean,
     is_active: boolean,
     files: number,
     folders: number,
@@ -124,9 +155,11 @@ export interface AdminUser extends UserInfo {
 
 export interface AdminSlice {
     users: AdminUser[],
-    userFiles: [],
+    userFiles: StorageFile[],
+    userFolders: StorageFolder[],
+    currentFolders: StorageFolder[]
     currentUser: AdminUser | null,
-    currentUserFolder: number,
+    currentUserFolder: number | null,
     page: number,
     param: string,
     loading: boolean,

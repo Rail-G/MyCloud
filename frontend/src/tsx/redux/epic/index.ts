@@ -3,7 +3,7 @@ import { loginEpic, logoutEpic, registrationEpic } from "./FormEpic/FormEpic";
 import { setFolderEpic, storageEpic } from "./StorageEpic/StorageEpic";
 import { deleteFileEpic, shareFileEpic, changeFileEpic, downloadFileEpic } from "./FileEpic/FileEpic";
 import { addFolderEpic, deleteFolderEpic, editFolderEpic } from "./FolderEpic/FolderEpic";
-import { adminGetEpic, adminDeleteEpic, adminEditEpic } from "./AdminEpic/AdminEpic";
+import { adminGetEpic, adminDeleteEpic, adminEditEpic, getUserItemsEpic, setFolderAdminEpic } from "./AdminEpic/AdminEpic";
 
 export const combinedEpic = combineEpics(
     loginEpic,
@@ -20,5 +20,7 @@ export const combinedEpic = combineEpics(
     deleteFolderEpic,
     adminGetEpic,
     adminDeleteEpic,
-    adminEditEpic
+    adminEditEpic,
+    getUserItemsEpic,
+    setFolderAdminEpic
 )

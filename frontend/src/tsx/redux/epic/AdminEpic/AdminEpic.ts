@@ -1,9 +1,9 @@
 import { Epic, ofType } from "redux-observable";
 import { RootAction, RootState } from "../../store/store";
-import { adminError, adminSuccess, deleteUser, editUser, getUsers } from "../../slice/AdminSlice/AdminSlice";
+import { adminError, adminSuccess, deleteUser, editUser, getUserItems, getUserItemsSuccess, getUsers, setCurrentFolderAdmin } from "../../slice/AdminSlice/AdminSlice";
 import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
-import { AdminUser } from "../../../typing";
+import { AdminUser, StorageAjaxResponse, StoragePayloadAction } from "../../../typing";
 
 
 export const adminGetEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
@@ -50,4 +50,28 @@ export const adminDeleteEpic: Epic<RootAction, RootAction, RootState> = (action$
             catchError((error) => of(adminError(error.response)))
         )
     )
+)
+
+export const getUserItemsEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
+    ofType(getUserItems.type),
+    switchMap((action) => {
+        const url = `${import.meta.env.VITE_SERVER_URL}api/folders/${action.payload}/`;
+        return ajax({
+            url: url,
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+            withCredentials: true
+        }).pipe(
+            map((responseData) => {
+                const data = responseData.response as StorageAjaxResponse
+                return getUserItemsSuccess({id: data.id, files: data.files, folders: data.folders, curentfolders: {id: data.id, folder_name: data.folder_name}} as StoragePayloadAction)
+            }),
+            catchError((error) => of(adminError(error.response)))
+        )
+    })
+)
+
+export const setFolderAdminEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
+    ofType(setCurrentFolderAdmin.type),
+    map((action) => getUserItems(action.payload.folderId))
 )
