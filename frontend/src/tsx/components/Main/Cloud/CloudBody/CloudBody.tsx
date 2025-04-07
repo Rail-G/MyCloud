@@ -73,13 +73,17 @@ export function CloudBody({searchValue}: {searchValue: string}) {
                 <div className='w-full mb-2.5'>
                     <ul className='list-none flex flex-wrap'>
                         {curentfolders.map((folder) => (
-                            <li onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
+                            <li key={`curFolder_${folder.id}`} onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
                                 {`${folder.folder_name}  >  `}
                             </li>
                         ))}
                     </ul>
                 </div>
-                {(!files.length && !folders.length && !storageError) && <EmptyStorage />}
+                {((!files.length && !folders.length && !storageError) 
+                || 
+                (folders.filter(el => el.folder_name.toLowerCase().includes(searchValue.toLowerCase())).length <= 0
+                && 
+                files.filter(el => el.file_name.toLowerCase().includes(searchValue.toLowerCase())).length <= 0)) && <EmptyStorage />}
                 {storageError && <ErrorStorage onConfirm={onClickToError} />}
                 {((files.length != 0 || folders.length != 0)) && <div className="flex flex-col justify-between h-[calc(100%-40px)]">
                     <div className="w-full mx-auto mb-6">

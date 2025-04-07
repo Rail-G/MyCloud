@@ -86,3 +86,4 @@ __pypackages__/
 .venv
 .qodo
 .env
+.env.development

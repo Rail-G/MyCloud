@@ -58,7 +58,7 @@ export function StorageBody({searchValue}: {searchValue: string}) {
                 <div className='w-full mb-2.5'>
                     <ul className='list-none flex flex-wrap'>
                         {currentFolders.map((folder) => (
-                            <li onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
+                            <li key={`curFolder_${folder.id}`} onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
                                 {`${folder.folder_name}  >  `}
                             </li>
                         ))}
