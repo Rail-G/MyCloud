@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../../hooks";
-import { changeFile } from "../../../../../redux/slice/FileSlice/FileSlice";
+import React from "react";
+import { useAppSelector } from "../../../../../hooks";
 
 interface Share {
     setShare: React.Dispatch<React.SetStateAction<boolean>>

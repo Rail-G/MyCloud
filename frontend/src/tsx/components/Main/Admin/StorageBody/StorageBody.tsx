@@ -17,7 +17,7 @@ import { StorageFile } from '../../../../typing'
 
 export function StorageBody({searchValue}: {searchValue: string}) {
     const [info, setInfo] = useState<{ set: boolean, file: StorageFile | null }>({ set: false, file: null })
-    const [edit, setEdit] = useState<{ set: boolean, fileId: number | null, fileExt: string }>({ set: false, fileId: null, fileExt: ''})
+    const [edit, setEdit] = useState<{ set: boolean, file: StorageFile | null }>({ set: false, file: null })
     const [share, setShare] = useState(false)
     const [delFile, setDeFile] = useState(false)
     const { userFiles, userFolders, currentFolders, currentUserFolder, currentUser, loading, error: storageError} = useAppSelector(state => state.admin)
@@ -29,7 +29,7 @@ export function StorageBody({searchValue}: {searchValue: string}) {
         dispatch(setCurrentFolderAdmin({folderId: folderId, filterCount: [...currentFolders].findIndex(folder => folder.id == folderId)}))
     }
     const onClickToConfirm = () => {
-        dispatch(deleteFile({id: info.file!.id, currentFolder: currentUserFolder!, admin: true}))
+        dispatch(deleteFile({id: info.file!.id, currentFolder: currentUserFolder!, curentFolders: currentFolders.length - 1, admin: true}))
         setInfo({set: false, file: null})
     }
 
@@ -43,13 +43,14 @@ export function StorageBody({searchValue}: {searchValue: string}) {
         if (!userFiles.length && !userFolders.length && currentUser != null) {
             dispatch(getUserItems(currentUser!.main_folder))
         }
+        // eslint-disable-next-line
     }, [])
 
     return (
         <>
             {loading && <Loader />}
             {info.set && <FileInfo setInfo={setInfo} setEdit={setEdit} setShare={setShare} setDelete={setDeFile} file={info.file} />}
-            {edit.set && <Edit setEdit={setEdit} fileId={edit.fileId!} fileExt={edit.fileExt}/>}
+            {edit.set && <Edit setEdit={setEdit} file={edit.file as StorageFile}/>}
             {share && <ShareLink setShare={setShare}/>}
             {delFile && <Warning state={setDeFile} onConfirm={onClickToConfirm}/>}
             {!loading && <section className="w-full h-full flex flex-col flex-grow">

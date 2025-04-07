@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from '../../../hooks'
+import { useAppDispatch } from '../../../hooks'
 import { setCookie } from '../../../redux/slice/FormSlice/FormSlice'
 import './Cookie.css'
 

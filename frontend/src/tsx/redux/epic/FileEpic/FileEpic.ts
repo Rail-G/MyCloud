@@ -3,8 +3,7 @@ import { RootAction, RootState } from "../../store/store";
 import { changeFile, deleteFile, downloadFile, fileError, fileSuccess, getShareLink } from "../../slice/FileSlice/FileSlice";
 import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
-import { StorageFile } from "../../../typing";
-import { getStorageItems, setCurrentFolder } from "../../slice/StorageSlice/StorageSlice";
+import { setCurrentFolder } from "../../slice/StorageSlice/StorageSlice";
 import { setCurrentFolderAdmin } from "../../slice/AdminSlice/AdminSlice";
 
 export const deleteFileEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
@@ -17,9 +16,9 @@ export const deleteFileEpic: Epic<RootAction, RootAction, RootState> = (action$)
         }).pipe(
             map(() => {
                 if (action.payload.admin) {
-                    return setCurrentFolderAdmin({folderId: action.payload.currentFolder, filterCount: null})
+                    return setCurrentFolderAdmin({folderId: action.payload.currentFolder, filterCount: action.payload.curentFolders})
                 } 
-                return setCurrentFolder({folderId: action.payload.currentFolder, filterCount: null})
+                return setCurrentFolder({folderId: action.payload.currentFolder, filterCount: action.payload.curentFolders})
             }),
             catchError(error => of(fileError(error.response)))
         )

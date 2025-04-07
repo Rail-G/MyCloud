@@ -9,12 +9,18 @@ interface EditUserType {
 }
 
 export function EditUser({onClickToClose, editUserInfo}: EditUserType) {
-    const [value, setValue] = useState({username: editUserInfo.username, is_staff: true})
+    const [value, setValue] = useState(editUserInfo.username)
+    const [checkbox, setCheckbox] = useState(editUserInfo.is_staff)
     const dispatch = useAppDispatch()
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(prev => ({...prev, [e.target.name]: e.target.value}))
+    const onChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(checkbox)
+        setCheckbox(e.target.checked)
+        console.log(checkbox)
+    }
+    const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        dispatch(editUser({id: editUserInfo.id, username: value.username, is_staff: value.is_staff}))
+        dispatch(editUser({id: editUserInfo.id, username: value, is_staff: checkbox}))
         onClickToClose()
     }
     return (
@@ -29,11 +35,13 @@ export function EditUser({onClickToClose, editUserInfo}: EditUserType) {
                 <form onSubmit={onSubmit} className='space-y-4' noValidate>
                     <div>
                         <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >Наименования</label>
-                        <input className='tool-input' onChange={onChange} type="text" value={value.username} name="username" id="tool-name" placeholder='Введите имя пользователя' />
+                        <input className='tool-input' onChange={onChangeValue} type="text" value={value} name="username" id="tool-name" placeholder='Введите имя пользователя' />
                     </div>
                     <div>
-                        <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >Сделать администратором</label>
-                        <input type="checkbox" checked={true} name="is_staff" id="tool-name" />
+                        <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >
+                            <span>Сделать администратором</span>
+                            <input className="ml-3" type="checkbox" onChange={onChangeCheckbox} checked={checkbox} name="is_staff" id="tool-name" />
+                        </label>
                     </div>
                     <div>
                         <button type='submit' className='tool-submit-btn'>

@@ -17,7 +17,7 @@ import { StorageFile } from '../../../../typing'
 
 export function CloudBody({searchValue}: {searchValue: string}) {
     const [info, setInfo] = useState<{ set: boolean, file: StorageFile | null }>({ set: false, file: null })
-    const [edit, setEdit] = useState<{ set: boolean, fileId: number | null, fileExt: string }>({ set: false, fileId: null, fileExt: ''})
+    const [edit, setEdit] = useState<{ set: boolean, file: StorageFile | null }>({ set: false, file: null })
     const [share, setShare] = useState(false)
     const [delFile, setDeFile] = useState(false)
     const { files, folders, curentfolders, currentFolder, loading, error: storageError} = useAppSelector(state => state.storage)
@@ -32,7 +32,7 @@ export function CloudBody({searchValue}: {searchValue: string}) {
         dispatch(setCurrentFolder({folderId: folderId, filterCount: [...curentfolders].findIndex(folder => folder.id == folderId)}))
     }
     const onClickToConfirm = () => {
-        dispatch(deleteFile({id: info.file!.id, currentFolder: currentFolder!, admin: false}))
+        dispatch(deleteFile({id: info.file!.id, currentFolder: currentFolder!, curentFolders: curentfolders.length - 1, admin: false}))
         setInfo({set: false, file: null})
     }
 
@@ -46,24 +46,26 @@ export function CloudBody({searchValue}: {searchValue: string}) {
         if (userInfo == null) {
             navigate('/login')
         }
-    }, [userInfo])
+    }, [userInfo, navigate])
 
     useEffect(() => {
         if (!files.length && !folders.length && userInfo != null) {
             dispatch(getStorageItems(userInfo!.user_folder))
         }
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         if (created) {
             dispatch(setCurrentFolder({folderId: currentFolder!, filterCount: curentfolders.length - 1}))
         }
+        // eslint-disable-next-line
     }, [created])
     return (
         <>
             {loading && <Loader />}
             {info.set && <FileInfo setInfo={setInfo} setEdit={setEdit} setShare={setShare} setDelete={setDeFile} file={info.file} />}
-            {edit.set && <Edit setEdit={setEdit} fileId={edit.fileId!} fileExt={edit.fileExt}/>}
+            {edit.set && <Edit setEdit={setEdit} file={edit.file!}/>}
             {share && <ShareLink setShare={setShare}/>}
             {delFile && <Warning state={setDeFile} onConfirm={onClickToConfirm}/>}
             {!loading && <section className="w-full h-full flex flex-col flex-grow">
@@ -71,7 +73,7 @@ export function CloudBody({searchValue}: {searchValue: string}) {
                 <div className='w-full mb-2.5'>
                     <ul className='list-none flex flex-wrap'>
                         {curentfolders.map((folder) => (
-                            <li key={folder.id} onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
+                            <li onClick={() => { onClickSendToServer(folder.id) }} className='cursor-pointer text-black hover:text-gray-500'>
                                 {`${folder.folder_name}  >  `}
                             </li>
                         ))}

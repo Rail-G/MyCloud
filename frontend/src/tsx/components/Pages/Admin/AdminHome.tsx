@@ -19,7 +19,7 @@ export function AdminHome() {
         if (!userInfo?.is_staff) {
             navigate('/')
         }
-    }, [userInfo])
+    }, [userInfo, navigate])
     return (
         <>
             {(userFiles.length > 0 || userFolders.length > 0 || currentUser != null)

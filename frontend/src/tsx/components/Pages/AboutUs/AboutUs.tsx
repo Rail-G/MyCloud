@@ -1,7 +1,8 @@
+import hazeCorp from '../../../../img/Haze-Corporation.png'
 export function AboutUs() {
     return (
         <section className="flex flex-col items-center">
-            <div className="bg-[url('src/img/Haze-Corporation.png')] bg-no-repeat bg-center bg-contain w-[700px] h-[250px]"></div>
+            <div className={`bg-no-repeat bg-center bg-contain w-[700px] h-[250px]`} style={{backgroundImage: `url(${hazeCorp})`}}></div>
             <p className="mb-2">
                     Haze Corporation — это научно информационная организация, занимающаяся исследованиями в области биохимии, а так же предоставлением различного рода IT-услуги.
                 Корпорация обхватывает огромные спекторы в информационных технологиях, включая создание и поддержку сайтов различного рода и предназначения, разработку программного обеспечения различного уровня.
@@ -28,7 +29,7 @@ export function AboutUs() {
                         </span>
                     </div>
                     <span>
-                        AF: 22-63375, RF: 79(498)54-55-55
+                        AF: 22-63375, RF: 74(492)26-33-75
                     </span>
                 </div>
                 <div className="w-[400px] flex gap-2 items-center shadow-sm rounded-xl p-2">

@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-unused-vars: "off" */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ErrorFormData, FormData, FormState, UserInfo } from "../../../typing";
 
@@ -46,10 +47,13 @@ const formSlice = createSlice({
         },
         setCookie: (state) => {
             state.cookie = true
+        },
+        changeError: (state) => {
+            state.error = null
         }
     }
 })
 
-export const {getUser, getUserError, getUserSuccess, createUser, createUserError, createUserSuccess, logoutUser, logoutUserSuccess, setCookie} = formSlice.actions
+export const {getUser, getUserError, getUserSuccess, createUser, createUserError, createUserSuccess, logoutUser, logoutUserSuccess, setCookie, changeError} = formSlice.actions
 export type formAction = ReturnType<typeof formSlice.actions[keyof typeof formSlice.actions]>
 export default formSlice.reducer

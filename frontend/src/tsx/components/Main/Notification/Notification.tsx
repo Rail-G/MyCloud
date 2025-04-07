@@ -1,5 +1,4 @@
 import { JSX } from 'react'
-import { useAppSelector } from '../../../hooks'
 import './Notification.css'
 import { NotificationType } from '../../../typing'
 

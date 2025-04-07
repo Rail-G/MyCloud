@@ -1,5 +1,3 @@
-import { useAppDispatch, useAppSelector } from "../../../../../hooks";
-import { getStorageItems, setCurrentFolder } from "../../../../../redux/slice/StorageSlice/StorageSlice";
 import { StorageFolder } from "../../../../../typing";
 
 export function Folder({id, folder_name, onClickToFolder}: StorageFolder) {

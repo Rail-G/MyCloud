@@ -1,7 +1,7 @@
 import { Epic, ofType } from "redux-observable";
 import { RootAction, RootState } from "../../store/store";
 import { adminError, adminSuccess, deleteUser, editUser, getUserItems, getUserItemsSuccess, getUsers, setCurrentFolderAdmin } from "../../slice/AdminSlice/AdminSlice";
-import { catchError, map, mergeMap, of, switchMap } from "rxjs";
+import { catchError, map, of, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import { AdminUser, StorageAjaxResponse, StoragePayloadAction } from "../../../typing";
 

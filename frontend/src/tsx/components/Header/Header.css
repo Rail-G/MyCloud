@@ -1,6 +1,5 @@
 /* tailwindcss */
 @import 'tailwindcss';
-
 .nav-link {
     @apply border-b-2 py-4.5 px-6 hover:bg-(--color-haze-200) relative;
 }
@@ -10,7 +9,7 @@
 }
 
 .user-dropdown-btn {
-@apply ml-13 block w-[10px] h-[10px] opacity-80 bg-[url(src/svg/arrow-down.svg)] bg-no-repeat bg-center bg-cover cursor-pointer
+@apply ml-13 block w-[10px] h-[10px] opacity-80
 }
 
 .dropdown-block {

@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-unused-vars: "off" */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreateFolder, DeleteFolder, EditFolder, FolderState } from "../../../typing";
 

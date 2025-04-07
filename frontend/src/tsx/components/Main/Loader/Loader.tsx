@@ -1,4 +1,5 @@
 import './Loader.css'
+import hazeCircle from '../../../../img/haze-circle.png'
 export function Loader() {
     return (
         <div className="flex justify-center flex-grow items-center h-[80%]">
@@ -11,7 +12,7 @@ export function Loader() {
                 <div className="circle circle6"></div>
                 <div className="circle circle7"></div>
                 <div className="circle circle8"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-[44%] -translate-y-[44%] w-40 h-40 rounded-full bg-cover bg-[url('src/img/haze-circle.png')]"></div>
+                <div className='absolute top-1/2 left-1/2 transform -translate-x-[44%] -translate-y-[44%] w-40 h-40 rounded-full bg-cover' style={{backgroundImage: `url(${hazeCircle}`}}></div>
             </div>
         </div>
     )

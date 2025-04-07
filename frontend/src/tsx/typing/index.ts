@@ -87,6 +87,7 @@ export interface FolderState {
 export interface DeleteFile {
     id: number, 
     currentFolder: number,
+    curentFolders: number,
     admin: boolean
 }
 

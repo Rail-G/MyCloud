@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { useAppDispatch } from "../../../../../hooks"
 
 interface AddFolderType {
     folderState: React.Dispatch<React.SetStateAction<boolean>>,
@@ -13,8 +12,10 @@ export function CreateFolder({folderState, onConfirm}: AddFolderType) {
     const onClickToCloseFolder = () => folderState(false)
     const onSubmit = (e: React.FormEvent, value: string) => {
         e.preventDefault()
-        if (value.length > 25) {
+        const pattern = /^[a-zа-я0-9_]{4,}$/gmi
+        if (!pattern.test(value)) {
             setError(true)
+            return
         }
         folderState(false)
         onConfirm(value)
@@ -34,7 +35,7 @@ export function CreateFolder({folderState, onConfirm}: AddFolderType) {
                         <div>
                             <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >
                                 <span>Название папки</span>
-                                {error && <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">Не более 25 символов</p>}
+                                {error && <p className="text-red-500 font-normal text-sm leading-[1.42]" id="usernameError">Не менее 4 символа и не более 25 символов</p>}
                                 </label>
                             <input className='tool-input' onChange={onChange} value={value} type="text" id="tool-name" placeholder='Введите название' />
                         </div>

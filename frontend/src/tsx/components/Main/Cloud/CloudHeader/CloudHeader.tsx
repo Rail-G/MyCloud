@@ -23,7 +23,7 @@ export function CloudHeader({searchValue, onChangeSearchValue}: SearchTool) {
         dispatch(deleteFolder({id: currentFolder!, previewFolder: [...curentfolders].splice(-2)[0].id, admin: false}))
     }
     const onClickToConfirmAdd = (value: string) => {
-        dispatch(addFolder({folderName: value, user: userInfo?.id!, currentFolder: currentFolder!, navNumber: curentfolders.length - 1}))
+        dispatch(addFolder({folderName: value, user: userInfo!.id, currentFolder: currentFolder!, navNumber: curentfolders.length - 1}))
     }
     const onClickToConfirmEdit = (value: string) => {
         dispatch(editFolder({id: currentFolder!, folderName: value, currentFolder: currentFolder!, navNumber: curentfolders.length - 1, admin: false}))

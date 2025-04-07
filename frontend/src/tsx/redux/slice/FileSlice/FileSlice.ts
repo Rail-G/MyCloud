@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-unused-vars: "off" */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DeleteFile, DownloadFile, FileState, PathFile, RetrieveFile } from "../../../typing";
 import { addFileThunk } from "../../thunk/addFileThunk";

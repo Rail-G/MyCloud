@@ -1,4 +1,6 @@
 import './Header.css'
+import haze from "../../../img/haze.png"
+import defaultImg from "../../../img/default.png"
 import { Link } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../hooks"
 import { useState } from 'react'
@@ -9,15 +11,15 @@ export function Header() {
     const onClick = () => setLogoutBtn(prev => !prev)
     const dispatch = useAppDispatch()
     const onLogoutClick = () => {
-        dispatch(logoutUser())
         setLogoutBtn(false)
+        dispatch(logoutUser())
     }
     return (
         <header className="bg-gray-200 z-2">
             <div className="container mx-auto flex items-center justify-between">
                 <div className="p-0">
                     <Link to="/" className="flex items-center py-1">
-                        <img src="src/img/haze.png" alt="" width='50px' height='50px' />
+                        <img src={haze} alt="" width='50px' height='50px' />
                         <span className="ml-2 font-(family-name:--font-roboto) font-medium text-lg">Haze Cloud</span>
                     </Link>
                 </div>
@@ -39,10 +41,13 @@ export function Header() {
                 <div className='border-l-1 border-black p-0'>
                     {userInfo != null
                     ? <div className='py-[10px] px-4 flex justify-center gap-x-15 items-center relative'>
-                        <img className='w-[35px] h-[35px] block' src="src/img/default.png" alt="" />
+                        <img className='w-[35px] h-[35px] block' src={defaultImg} alt="" />
                         <span className='ml-[-40px] text-base'>{userInfo.username}</span>
                         <div>
-                            <button onClick={onClick} className='user-dropdown-btn'></button>
+                            <button onClick={onClick} className='user-dropdown-btn'>
+                                <svg className="cursor-pointer" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fillRule="evenodd" clipRule="evenodd" d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z" fill="#000000"></path> </g></svg>
+
+                            </button>
                             <div className={`dropdown-block ${logoutBtn && 'dropdown-block-active'}`}>
                                 <ul className="p-0 m-0">
                                     <li className='font-medium text-center py-1'>

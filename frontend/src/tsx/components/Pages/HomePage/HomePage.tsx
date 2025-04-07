@@ -13,7 +13,7 @@ export function HomePage() {
             if (userInfo == null) {
                 navigate('/login')
             }
-        }, [userInfo])
+        }, [userInfo, navigate])
     return (
         <>
             <CloudHeader searchValue={value} onChangeSearchValue={onChange} />

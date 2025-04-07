@@ -4,7 +4,7 @@ import { createUser, createUserError, createUserSuccess, getUser, getUserError, 
 import { catchError, map, mergeMap, of, Subject, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import { UserInfo } from "../../../typing";
-import { logoutUserStorage, setCurrentFolder } from "../../slice/StorageSlice/StorageSlice";
+import { logoutUserStorage } from "../../slice/StorageSlice/StorageSlice";
 import { logoutUserAdmin } from "../../slice/AdminSlice/AdminSlice";
 
 export const registrationSubject = new Subject();

@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { deleteFile, downloadFile, getShareLink } from '../../../../redux/slice/FileSlice/FileSlice';
+import { useAppDispatch } from '../../../../hooks';
+import { downloadFile, getShareLink } from '../../../../redux/slice/FileSlice/FileSlice';
 import { StorageFile } from '../../../../typing';
 import { formatDate, formatFileSize } from '../../../../utils';
 import './FileInfo.css'
@@ -11,24 +11,20 @@ interface InfoProp {
     }>>,
     setEdit: React.Dispatch<React.SetStateAction<{
         set: boolean;
-        fileId: number | null;
-        fileExt: string;
-    }>>,
+        file: StorageFile | null;
+    }>>
     setShare: React.Dispatch<React.SetStateAction<boolean>>,
     setDelete: React.Dispatch<React.SetStateAction<boolean>>,
     file: StorageFile | null;
 }
 
 export function FileInfo({setInfo, setEdit, setShare, setDelete, file}: InfoProp) {
-    // const {currentFolder, curentfolders} = useAppSelector(state => state.storage)
-    // const {files} = useAppSelector(state => state.storage)
-    // const file = files.filter(file => file.id == fileId)[0]
     const formatedFileData = formatDate(new Date(file!.created))
     const formatedFileSize = formatFileSize(file!.size)
     const dispatch = useAppDispatch()
     const onClickToClose = () => setInfo({set: false, file: null})
     const onClickDownload = () => dispatch(downloadFile({id: file!.id, fileName: file!.file_name}))
-    const onClickToChange = () => setEdit({set: true, fileId: file!.id, fileExt: file!.extensions})
+    const onClickToChange = () => setEdit({set: true, file: file})
     const onClickToShare = () => {
         dispatch(getShareLink({id: file!.id}))
         setShare(true)

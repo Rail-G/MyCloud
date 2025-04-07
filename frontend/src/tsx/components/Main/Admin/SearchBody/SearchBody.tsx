@@ -31,7 +31,7 @@ export function SearchBody() {
         if (!users.length) {
             dispatch(getUsers({page: page, param: param}))
         }
-    }, [])
+    }, [dispatch, page, param, users.length])
     return (
         <>
             {delUser && <Warning state={setDelUser} onConfirm={onClickToDelete} />}

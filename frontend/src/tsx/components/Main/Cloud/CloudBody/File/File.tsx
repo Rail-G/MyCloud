@@ -1,5 +1,4 @@
 import { StorageFile } from "../../../../../typing";
-import { formatDate } from "../../../../../utils";
 
 interface FileProps {
     file: StorageFile,

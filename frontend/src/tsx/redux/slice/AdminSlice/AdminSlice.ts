@@ -1,5 +1,6 @@
+/* eslint @typescript-eslint/no-unused-vars: "off" */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AdminEdit, AdminSlice, AdminUser, StoragePayloadAction, UserInfo } from "../../../typing"
+import { AdminEdit, AdminSlice, AdminUser, StoragePayloadAction } from "../../../typing"
 
 const initialState: AdminSlice = {
     users: [],
@@ -56,19 +57,19 @@ const adminSlice = createSlice({
         },
         setCurrentFolderAdmin: (state, action: PayloadAction<{folderId: number | null, filterCount: number | null}>) => {
             state.currentFolders = state.currentFolders.splice(0, action.payload.filterCount != null ? action.payload.filterCount : state.currentFolders.length - 2)
-            state.currentUserFolder = action.payload.folderId
+            state.currentUserFolder = action.payload.folderId;
         },
         backToTable: (state) => {
-            state.userFiles = [],
-            state.userFolders = [],
-            state.currentUser = null
+            state.userFiles = [];
+            state.userFolders = [];
+            state.currentUser = null;
         },
         logoutUserAdmin: (state) => {
-            state.users = []
-            state.userFiles = []
-            state.currentUser = null,
-            state.currentUserFolder = 0,
-            state.page = 1,
+            state.users = [];
+            state.userFiles = [];
+            state.currentUser = null;
+            state.currentUserFolder = 0;
+            state.page = 1;
             state.param = '';
         }
     }

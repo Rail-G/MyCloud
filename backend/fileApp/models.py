@@ -11,7 +11,6 @@ def customDir(instance, filename):
     renamed_file_name, new_file_path = renamer(instance.user, filename, instance.folder)
     instance.file_name = renamed_file_name
     instance.extensions = renamed_file_name.split('.')[-1]
-    print(new_file_path)
     return new_file_path
 
 def renamer(user, filename, folder=None):
@@ -44,6 +43,20 @@ class UsersFiles(models.Model):
     downloaded = models.DateTimeField(blank=True, null=True, verbose_name='Дата скачивания')
 
     def save(self, *args, **kwargs):
+        if (self.pk): 
+            new_file_name = '_'.join(os.path.basename(self.file_name).split())
+            folder = self.folder
+            folders = ''
+            while folder is not None:
+                folders = f'{folder.folder_name}/{folders}'
+                if folder.parent_folder is not None:
+                    folder = folder.parent_folder
+                else: 
+                    break
+            file_path = f'{folders}{new_file_name}'
+            new_full_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
+            if os.path.exists(new_full_file_path):
+                raise ValidationError(f"Файл с именем '{new_file_name}' уже существует. Пожалуйста, переименуйте файл.")
         if self.file_name:
             self_file_name = '_'.join(self.file_name.split())
             original_file_name = '_'.join(os.path.basename(self.file.name).split())
@@ -54,6 +67,7 @@ class UsersFiles(models.Model):
                     self.file_name = self_file_name
                     self.file.name = file_path
                     new_full_file_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, file_path))
+                    print(old_full_file_path, new_full_file_path)
                     if os.path.exists(new_full_file_path):
                         raise ValidationError(f"Файл с именем '{self_file_name}' уже существует. Пожалуйста, переименуйте файл.")
                     os.rename(old_full_file_path, new_full_file_path)

@@ -1,6 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getStorageItems } from "../slice/StorageSlice/StorageSlice";
-import { useAppDispatch } from "../../hooks";
 
 export const addFileThunk = createAsyncThunk(
     'file/upload',

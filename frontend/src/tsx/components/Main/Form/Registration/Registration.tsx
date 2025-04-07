@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import './Registration.css'
 import { useAppDispatch, useAppSelector } from '../../../../hooks'
 import { Link, useNavigate } from 'react-router-dom'
-import { createUser } from '../../../../redux/slice/FormSlice/FormSlice'
+import { changeError, createUser } from '../../../../redux/slice/FormSlice/FormSlice'
 import { Loader } from '../../Loader/Loader'
 import { registrationSubject } from '../../../../redux/epic/FormEpic/FormEpic'
 export function Registration() {
     const [data, setData] = useState({ username: '', email: '', password: '', confirmPassword: '' })
-    const [errorFront, setErrorFront] = useState({ username: false, email: false, password: false })
+    const [errorFront, setErrorFront] = useState({ username: false, email: false, password: false, confirmPassword: false })
     const [typing, setTyping] = useState(false)
     const { loading, error, isAuthenticated } = useAppSelector(state => state.form)
     const navigate = useNavigate()
@@ -17,11 +17,13 @@ export function Registration() {
         if (isAuthenticated) {
             navigate('/')
         }
-    }, [isAuthenticated])
+    }, [isAuthenticated, navigate])
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!typing) {
             setTyping(true)
+            setErrorFront({ username: false, email: false, password: false, confirmPassword: false })
+            dispatch(changeError())
         }
         setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
     }
@@ -29,12 +31,23 @@ export function Registration() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setTyping(false)
-        if (data.email && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/gi.test(data.email)) {
+        const usernamePattern = /^[a-z][a-z0-9]{3,19}$/gmi;
+        const passwordPattern = /^(?=.*\d)(?=.*\W)(?=.*[A-Z])[\S]{6,}$/gm
+        const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/gi
+        if (!usernamePattern.test(data.username)) {
+            setErrorFront(prev => ({...prev, username: true}))
+            return
+        }
+        if (data.email && !emailPattern.test(data.email)) {
             setErrorFront(prev => ({ ...prev, email: true }))
             return
         }
-        if (data.password != data.confirmPassword) {
+        if (!passwordPattern.test(data.password)) {
             setErrorFront(prev => ({ ...prev, password: true }))
+            return
+        }
+        if (data.password != data.confirmPassword) {
+            setErrorFront(prev => ({ ...prev, confirmPassword: true }))
             return
         }
         dispatch(createUser(data))
@@ -56,9 +69,10 @@ export function Registration() {
                             <h2 className="text-2xl font-bold text-center text-(--color-haze) mb-6">Создание аккаунта</h2>
                             <form id="registrationForm" className="space-y-6" onSubmit={onSubmit} noValidate>
                                 <div>
-                                    <label htmlFor="username" className="flex text-(--color-haze) font-semibold mb-2">
+                                    <label htmlFor="username" className="flex flex-col text-(--color-haze) font-semibold mb-2">
                                         <span>Имя пользователя</span>
-                                        {(error != null && error.username && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="usernameError">{error.username}</p>}
+                                        {(errorFront.username && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8]" id="emailError">Только буквы или цифры</p>}
+                                        {(error != null && error.username && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8]" id="usernameError">{error.username}</p>}
                                     </label>
                                     <input
                                         type="text"
@@ -66,17 +80,17 @@ export function Registration() {
                                         name="username"
                                         className="reg-form-input"
                                         placeholder="Введите имя пользователя"
-                                        maxLength={50}
+                                        maxLength={20}
                                         value={data.username}
                                         onChange={onChange}
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="email" className="flex text-(--color-haze) font-semibold mb-2">
+                                    <label htmlFor="email" className="flex flex-col text-(--color-haze) font-semibold mb-2">
                                         <span>Email</span>
-                                        {errorFront.email && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="emailError">Не валидный email</p>}
-                                        {(error != null && error.email && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="emailError">{error.email}</p>}
+                                        {(errorFront.email && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8]" id="emailError">Не валидный email</p>}
+                                        {(error != null && error.email && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8]" id="emailError">{error.email}</p>}
                                     </label>
                                     <input
                                         type="email"
@@ -91,9 +105,10 @@ export function Registration() {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="password" className="flex text-(--color-haze) font-semibold mb-2">
+                                    <label htmlFor="password" className="flex flex-col text-(--color-haze) font-semibold mb-2">
                                         <span>Пароль</span>
-                                        {(error != null && error.password && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="passwordError">Пользователь с таким паролем уже существует</p>}
+                                        {(errorFront.password && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8]" id="emailError">Не менее 6 символов: как минимум одна заглавная буква, одна цифра и один специальный символ</p>}
+                                        {(error != null && error.password && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8]" id="passwordError">Пользователь с таким паролем уже существует</p>}
                                     </label>
                                     <input
                                         type="password"
@@ -108,9 +123,9 @@ export function Registration() {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="confirm-password" className="flex text-(--color-haze) font-semibold mb-2">
+                                    <label htmlFor="confirm-password" className="flex flex-col text-(--color-haze) font-semibold mb-2">
                                         <span>Подтверждение пароля</span>
-                                        {(errorFront.password && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8] ml-2" id="confirmPasswordError">Пароли не совподают</p>}
+                                        {(errorFront.confirmPassword && !typing) && <p className="text-red-500 font-normal text-sm leading-[1.8]" id="confirmPasswordError">Пароли не совпадают</p>}
                                     </label>
                                     <input
                                         type="password"

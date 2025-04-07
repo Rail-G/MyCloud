@@ -8,13 +8,12 @@ import { Provider } from "react-redux"
 import { persistedStore, store } from "../../redux/store/store"
 import { Page404 } from "../Pages/Page404/Page404"
 import { PersistGate } from "redux-persist/integration/react"
-import { SearchBody } from "../Main/Admin/SearchBody/SearchBody"
 import { AdminHome } from "../Pages/Admin/AdminHome"
 
 
 export function Router() {
     return (
-        // <PersistGate loading={null} persistor={persistedStore}>
+        <PersistGate loading={null} persistor={persistedStore}>
             <Provider store={store}>
                 <BrowserRouter>
                     <Routes>
@@ -29,6 +28,6 @@ export function Router() {
                     </Routes>
                 </BrowserRouter>
             </Provider>
-        // </PersistGate> 
+        </PersistGate> 
     )
 }

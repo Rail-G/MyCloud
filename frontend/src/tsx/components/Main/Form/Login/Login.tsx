@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './Login.css'
 import { useAppDispatch, useAppSelector } from '../../../../hooks'
-import { getUser } from '../../../../redux/slice/FormSlice/FormSlice'
+import { changeError, getUser } from '../../../../redux/slice/FormSlice/FormSlice'
 import { Loader } from '../../Loader/Loader'
 import { FormData } from '../../../../typing'
 import { Link, useNavigate } from 'react-router-dom'
 export function Login() {
     const [data, setData] = useState<FormData>({ username: '', password: '' })
-    const {loading, error, isAuthenticated } = useAppSelector(state => state.form)
+    const {loading, error: formError, isAuthenticated } = useAppSelector(state => state.form)
     const [typing, setTyping] = useState(false)
+    const [frontError, setFrontError] = useState(false)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
 
@@ -19,6 +20,7 @@ export function Login() {
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!typing) {
             setTyping(true)
+            dispatch(changeError())
         }
         setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
     }
@@ -26,6 +28,13 @@ export function Login() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setTyping(false)
+        const pattern = /^[a-z][a-z0-9]{3,19}$/gmi;
+        if (!pattern.test(data.username)) {
+            setFrontError(true)
+            return
+        }
+    
+        setFrontError(false)
         dispatch(getUser(data))
     }
     return (
@@ -39,7 +48,8 @@ export function Login() {
                             <div>
                                 <label htmlFor="email" className="text-sm font-medium text-(--color-haze) mb-2 flex">
                                     <span>Имя пользователя</span>
-                                    {(error != null && error.error && !typing ) && <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">{error.error}</p>}
+                                    {(frontError && !typing) &&  <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">Невалидные значения</p>}
+                                    {(formError != null && formError.error && !typing ) && <p className="text-red-500 font-normal text-sm leading-[1.42] ml-2" id="usernameError">{formError.error}</p>}
                                 </label>
                                 <input
                                     type="username"
@@ -48,9 +58,8 @@ export function Login() {
                                     className="log-form-input"
                                     placeholder="Моё имя..."
                                     value={data.username}
-                                    maxLength={50}
+                                    maxLength={20}
                                     onChange={onChange}
-                                    pattern='^[a-zA-Z0-9]{0,75}$'
                                     required
                                 />
                             </div>

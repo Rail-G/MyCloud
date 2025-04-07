@@ -27,10 +27,12 @@ class UsersFolders(models.Model):
                 parent_path = self.parent_folder.get_absolute_path()
             folder_path = os.path.join(settings.MEDIA_ROOT, parent_path, self.folder_name)
             if os.path.exists(folder_path):
-                raise ValidationError("Папка с таким именем уже существует на файловой системе.")
+                raise ValidationError("Папка с таким именем уже существует в файловой системе.")
             os.makedirs(folder_path)
         else:
-            parent_path = self.parent_folder.get_absolute_path()
+            parent_path = ''
+            if self.parent_folder:
+                parent_path = self.parent_folder.get_absolute_path()
             old_folder_name = UsersFolders.objects.get(pk=self.id).folder_name
             new_folder_path = os.path.join(settings.MEDIA_ROOT, parent_path, self.folder_name)
             old_folder_path = os.path.join(settings.MEDIA_ROOT, parent_path, old_folder_name)

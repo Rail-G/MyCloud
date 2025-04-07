@@ -1,34 +1,36 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks";
 import { changeFile } from "../../../../../redux/slice/FileSlice/FileSlice";
+import { StorageFile } from "../../../../../typing";
 
 interface EditProp {
     setEdit: React.Dispatch<React.SetStateAction<{
         set: boolean;
-        fileId: number | null;
-        fileExt: string;
-    }>>,
-    fileId: number,
-    fileExt: string
+        file: StorageFile | null;
+    }>>
+    file: StorageFile
 }
 
-export function Edit({setEdit, fileId, fileExt}: EditProp) {
+export function Edit({setEdit, file}: EditProp) {
     const {currentFolder, curentfolders} = useAppSelector(state => state.storage)
     const {userInfo} = useAppSelector(state => state.form)
-    const [value, setValue] = useState({fileName: '', comment: ''})
+    const [value, setValue] = useState({fileName: file.file_name.split('.')[0], comment: file.comment})
     const dispatch = useAppDispatch()
 
     const onClickToClose = () => {
-        setEdit({set: false, fileId: null, fileExt: ''})
+        setEdit({set: false, file: null})
         setValue({fileName: '', comment: ''})
     }
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(prev => ({...prev, [e.target.name]: e.target.value}))
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+        if (value.fileName.length <= 0) {
+            return
+        }
         dispatch(changeFile(
             {
-                id: fileId, 
-                fileName: `${value.fileName}.${fileExt}`,
+                id: file.id, 
+                fileName: `${value.fileName}.${file.extensions}`,
                 user: userInfo!.id,
                 comment: value.comment,
                 folder: currentFolder!,
@@ -36,7 +38,7 @@ export function Edit({setEdit, fileId, fileExt}: EditProp) {
                 admin: false
             }
         ))
-        setEdit({set: false, fileId: null, fileExt: ''})
+        setEdit({set: false, file: null})
         setValue({fileName: '', comment: ''})
     }
     return (

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth import login, logout
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
@@ -10,6 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.middleware.csrf import get_token
 from rest_framework.response import Response
 from rest_framework import status
+from .signals import signal_manager
 
 
 class UsersPagination(PageNumberPagination):
@@ -60,10 +62,12 @@ class UserLoginView(ModelViewSet):
             response = Response({
                 'id': serializedUser['id'], 'username': serializedUser['username'], 'is_staff': serializedUser['is_staff'], 'is_superuser': serializedUser['is_superuser'], "user_folder": serializedUser['user_folder']
                 }, status=status.HTTP_200_OK)
+            signal_manager.disable()
             login(request, user)
-            print("Session data after login:", request.session.items(), request.user)
-            response.set_cookie(key='a_t', value=token[0].key, httponly=True, secure=True, samesite='None')
-            response.set_cookie(key='csrf', value=csrf, httponly=True, secure=True, samesite='None')
+            signal_manager.enable()
+            expires = datetime.now() + timedelta(days=365)
+            response.set_cookie(key='a_t', value=token[0].key, httponly=True, expires=expires, secure=True, samesite='None')
+            response.set_cookie(key='csrf', value=csrf, httponly=True, expires=expires, secure=True, samesite='None')
 
             return response
         else:
