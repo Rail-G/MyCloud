@@ -42,8 +42,9 @@ class UsersFiles(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name='Загружено')
     downloaded = models.DateTimeField(blank=True, null=True, verbose_name='Дата скачивания')
 
+    skip_update = False
     def save(self, *args, **kwargs):
-        if (self.pk): 
+        if self.pk and not self.skip_update: 
             new_file_name = '_'.join(os.path.basename(self.file_name).split())
             folder = self.folder
             folders = ''

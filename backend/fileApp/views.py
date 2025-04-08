@@ -47,18 +47,24 @@ class FileView(ModelViewSet):
             code = os.urandom(16).hex()
             file_link = request.build_absolute_uri(f'/api/files/shared-file/{code}')
             file.share_link = file_link
+            file.skip_update = True
             file.save()
+            file.skip_update = False
         return Response({'share_link': file_link}, status=status.HTTP_200_OK)
     
     def share_detail(self, request, code, *args, **kwargs):
         share_link = request.build_absolute_uri(f'/api/files/shared-file/{code}')
         file = get_object_or_404(queryset=self.queryset, share_link=share_link)
         file.downloaded = datetime.now()
+        file.skip_update = True
         file.save()
+        file.skip_update = False
         return FileResponse(open(file.file.path, 'rb'), as_attachment=True)
 
     def download(self, request, pk, *args, **kwargs):
         file = get_object_or_404(queryset=self.queryset, pk=pk)
         file.downloaded = datetime.now()
+        file.skip_update = True
         file.save()
+        file.skip_update = False
         return FileResponse(open(file.file.path, 'rb'), as_attachment=True)

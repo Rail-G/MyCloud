@@ -33,6 +33,6 @@ def create_folder(sender, instance, created, **kwargs):
         folder.save()
 
 @receiver(post_delete, sender=Users)
-def create_folder(sender, instance, **kwargs):
+def delete_folder(sender, instance, **kwargs):
     path = os.path.join(settings.MEDIA_ROOT, f'{instance.username}_{instance.id}')
     shutil.rmtree(path)

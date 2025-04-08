@@ -66,8 +66,8 @@ class UserLoginView(ModelViewSet):
             login(request, user)
             signal_manager.enable()
             expires = datetime.now() + timedelta(days=365)
-            response.set_cookie(key='a_t', value=token[0].key, httponly=True, expires=expires, secure=True, samesite='None')
-            response.set_cookie(key='csrf', value=csrf, httponly=True, expires=expires, secure=True, samesite='None')
+            response.set_cookie(key='a_t', value=token[0].key, httponly=True, secure=True, samesite='None')
+            response.set_cookie(key='csrf', value=csrf, httponly=True, secure=True, samesite='None')
 
             return response
         else:
@@ -76,6 +76,7 @@ class UserLoginView(ModelViewSet):
     def user_registration(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        print(serializer)
         new_user = serializer.save()
 
         return Response({}, status=status.HTTP_201_CREATED)
