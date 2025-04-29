@@ -59,7 +59,7 @@ export function CreateFile({setAddFile}: AddFileType) {
                             <input onChange={onChangeInput} className='tool-input' value={comment} name="comment" type="text" id="tool-name" placeholder='Введите комментарий' />
                         </div>
                         <div>
-                            <button type='submit' disabled={Math.floor(size ? +size.split(' ')[0]: 0) > 100} className={Math.floor(size ? +size.split(' ')[0]: 0) > 100 ? 'tool-not-submit-btn' : 'tool-submit-btn'}>
+                            <button type='submit' disabled={Math.floor(file ? file.size: 0) > 100 * 1024 ** 2} className={Math.floor(file ? file.size: 0) > 100 * 1024 ** 2 ? 'tool-not-submit-btn' : 'tool-submit-btn'}>
                                 Добавить
                             </button>
                         </div>
