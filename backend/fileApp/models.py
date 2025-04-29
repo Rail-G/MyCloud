@@ -46,6 +46,7 @@ class UsersFiles(models.Model):
     def save(self, *args, **kwargs):
         if self.pk and not self.skip_update: 
             new_file_name = '_'.join(os.path.basename(self.file_name).split())
+            old_file_name = '_'.join(os.path.basename(self.file.name).split())
             folder = self.folder
             folders = ''
             while folder is not None:
@@ -56,7 +57,7 @@ class UsersFiles(models.Model):
                     break
             file_path = f'{folders}{new_file_name}'
             new_full_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
-            if os.path.exists(new_full_file_path):
+            if (not (new_file_name == old_file_name)) and os.path.exists(new_full_file_path):
                 raise ValidationError(f"Файл с именем '{new_file_name}' уже существует. Пожалуйста, переименуйте файл.")
         if self.file_name:
             self_file_name = '_'.join(self.file_name.split())

@@ -17,7 +17,7 @@
 }
 
 .tool-body {
-  @apply bg-white shadow-2xl rounded-xl px-8 py-6 max-w-md w-full transform transition-all duration-300 relative
+  @apply bg-white shadow-2xl rounded-xl px-8 py-6 max-w-md w-full transform transition-all duration-300 relative flex flex-col justify-center
 }
 
 .tool-close-btn {
@@ -30,4 +30,8 @@
 
 .tool-submit-btn {
   @apply w-full p-2 shadow-sm text-center rounded-xl text-sm font-medium text-white bg-(--color-haze) hover:bg-(--color-haze) focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--color-haze) transform transition-all duration-300 cursor-pointer
+}
+
+.tool-not-submit-btn {
+  @apply w-full p-2 shadow-sm text-center rounded-xl text-sm font-medium text-gray-200 bg-gray-400
 }

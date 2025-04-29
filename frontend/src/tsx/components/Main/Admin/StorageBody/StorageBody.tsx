@@ -50,7 +50,7 @@ export function StorageBody({searchValue}: {searchValue: string}) {
         <>
             {loading && <Loader />}
             {info.set && <FileInfo setInfo={setInfo} setEdit={setEdit} setShare={setShare} setDelete={setDeFile} file={info.file} />}
-            {edit.set && <Edit setEdit={setEdit} file={edit.file as StorageFile}/>}
+            {edit.set && <Edit setEdit={setEdit} file={edit.file as StorageFile} setInfo={setInfo}/>}
             {share && <ShareLink setShare={setShare}/>}
             {delFile && <Warning state={setDeFile} onConfirm={onClickToConfirm}/>}
             {!loading && <section className="w-full h-full flex flex-col flex-grow">

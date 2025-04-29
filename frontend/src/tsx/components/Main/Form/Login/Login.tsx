@@ -22,7 +22,7 @@ export function Login() {
             setTyping(true)
             dispatch(changeError())
         }
-        setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+        setData(prev => ({ ...prev, [e.target.name]: e.target.value.trim() }))
     }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -35,7 +35,7 @@ export function FileInfo({setInfo, setEdit, setShare, setDelete, file}: InfoProp
     return (
         <section className="bg-black rounded-xl flex justify-center items-center fixed z-1 top-18 left-30 w-auto right-30 py-1 px-5">
             <div className="flex w-full p-3">
-                <div className="w-[240px] flex items-center h-8.5">
+                <div className="w-[300px] flex items-center h-8.5">
                     <button className="mr-3 cursor-pointer h-full flex items-center relative group">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Warning / Info"> <path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
                         <div className="file-info">

@@ -9,7 +9,7 @@ export function Footer() {
                 </div>
                 <div className="w-full">
                     <ul className="list-none flex justify-center gap-6">
-                        <li><Link className="hover:text-white" to="">О нас</Link></li>
+                        <li><Link className="hover:text-white" to="/about">О нас</Link></li>
                     </ul>
                 </div>
             </div>

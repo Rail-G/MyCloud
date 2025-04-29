@@ -4,6 +4,7 @@ import { getStorageItems, getStorageItemsError, getStorageItemsSuccess, setCurre
 import { catchError, map, of, switchMap } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import { StorageAjaxResponse, StoragePayloadAction } from "../../../typing";
+import { logoutUserSuccess } from "../../slice/FormSlice/FormSlice";
 
 
 export const storageEpic: Epic<RootAction, RootAction, RootState> = (action$) => action$.pipe(
@@ -20,7 +21,7 @@ export const storageEpic: Epic<RootAction, RootAction, RootState> = (action$) =>
                 const data = responseData.response as StorageAjaxResponse
                 return getStorageItemsSuccess({id: data.id, files: data.files, folders: data.folders, curentfolders: {id: data.id, folder_name: data.folder_name}} as StoragePayloadAction)
             }),
-            catchError((error) => of(getStorageItemsError(error.response)))
+            catchError((error) => of(logoutUserSuccess(), getStorageItemsError(error.response)))
         )
     })
 )

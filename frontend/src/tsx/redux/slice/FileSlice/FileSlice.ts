@@ -15,7 +15,6 @@ const fileSlice = createSlice({
     initialState,
     reducers: {
         deleteFile: (state, _action: PayloadAction<DeleteFile>) => {
-            state.loading = true;
             state.error = null;
         },
         getShareLink: (state, _action: PayloadAction<RetrieveFile>) => {

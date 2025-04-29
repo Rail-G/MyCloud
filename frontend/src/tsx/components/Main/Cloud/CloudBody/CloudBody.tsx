@@ -20,7 +20,8 @@ export function CloudBody({searchValue}: {searchValue: string}) {
     const [edit, setEdit] = useState<{ set: boolean, file: StorageFile | null }>({ set: false, file: null })
     const [share, setShare] = useState(false)
     const [delFile, setDeFile] = useState(false)
-    const { files, folders, curentfolders, currentFolder, loading, error: storageError} = useAppSelector(state => state.storage)
+    const { files, folders, curentfolders, currentFolder, loading: storageLoad, error: storageError} = useAppSelector(state => state.storage)
+    const {loading: fileLoad} = useAppSelector(state => state.file)
     const { userInfo } = useAppSelector(state => state.form)
     const {created} = useAppSelector(state => state.file)
     const navigate = useNavigate()
@@ -63,12 +64,12 @@ export function CloudBody({searchValue}: {searchValue: string}) {
     }, [created])
     return (
         <>
-            {loading && <Loader />}
+            {(storageLoad || fileLoad) && <Loader />}
             {info.set && <FileInfo setInfo={setInfo} setEdit={setEdit} setShare={setShare} setDelete={setDeFile} file={info.file} />}
-            {edit.set && <Edit setEdit={setEdit} file={edit.file!}/>}
+            {edit.set && <Edit setEdit={setEdit} file={edit.file!} setInfo={setInfo}/>}
             {share && <ShareLink setShare={setShare}/>}
             {delFile && <Warning state={setDeFile} onConfirm={onClickToConfirm}/>}
-            {!loading && <section className="w-full h-full flex flex-col flex-grow">
+            {!(storageLoad || fileLoad) && <section className="w-full h-full flex flex-col flex-grow">
                 <h2 className="text-xl font-bold mb-2.5">File Manager</h2>
                 <div className='w-full mb-2.5'>
                     <ul className='list-none flex flex-wrap'>

@@ -25,7 +25,7 @@ export function Registration() {
             setErrorFront({ username: false, email: false, password: false, confirmPassword: false })
             dispatch(changeError())
         }
-        setData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+        setData(prev => ({ ...prev, [e.target.name]: e.target.value.trim() }))
     }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -8,10 +8,14 @@ interface EditProp {
         set: boolean;
         file: StorageFile | null;
     }>>
-    file: StorageFile
+    file: StorageFile,
+    setInfo: React.Dispatch<React.SetStateAction<{
+        set: boolean;
+        file: StorageFile | null;
+    }>>
 }
 
-export function Edit({setEdit, file}: EditProp) {
+export function Edit({setEdit, file, setInfo}: EditProp) {
     const {currentFolder, curentfolders} = useAppSelector(state => state.storage)
     const {userInfo} = useAppSelector(state => state.form)
     const [value, setValue] = useState({fileName: file.file_name.split('.')[0], comment: file.comment})
@@ -40,6 +44,7 @@ export function Edit({setEdit, file}: EditProp) {
         ))
         setEdit({set: false, file: null})
         setValue({fileName: '', comment: ''})
+        setInfo({set: false, file: null})
     }
     return (
         <section className='tool-main'>
