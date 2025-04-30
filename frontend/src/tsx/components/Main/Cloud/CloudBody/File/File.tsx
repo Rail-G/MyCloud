@@ -19,7 +19,7 @@ export function File({file, setInfo}: FileProps) {
                 <span className="file-img-text">{file.extensions.toUpperCase()}</span>
             </div>
             <div className="text-center">
-                <h2 className="font-medium">{file.file_name}</h2>
+                <h2 className="font-medium" title={file.file_name}>{file.file_name.length <= 15 ? file.file_name : file.file_name.slice(0,15) + '...'}</h2>
                 {file.comment && <p className='text-xs overflow-x-hidden'>{file.comment}</p>}
             </div>
         </div>

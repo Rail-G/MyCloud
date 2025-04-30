@@ -22,7 +22,6 @@ const fileSlice = createSlice({
             state.error = null;
         },
         downloadFile: (state, _action: PayloadAction<DownloadFile>) => {
-            state.loading = true;
             state.error = null;
         },
         changeFile: (state, _action: PayloadAction<PathFile>) => {

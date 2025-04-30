@@ -3,3 +3,15 @@
 .tr-th {
     @apply px-6 py-3  text-xs font-medium text-white uppercase tracking-wider text-center bg-(--color-haze-600)
 }
+
+.tr-left-btn {
+    @apply cursor-pointer relative inline-flex items-center px-4 py-2 rounded-l-md bg-(--color-haze-600) text-sm font-medium text-gray-500 hover:bg-(--color-haze-200)
+}
+
+.tr-right-btn {
+    @apply cursor-pointer relative inline-flex items-center px-4 py-2 rounded-r-md bg-(--color-haze-600) text-sm font-medium text-gray-500 hover:bg-(--color-haze-200)
+}
+
+.tr-disabled-btn {
+    @apply bg-gray-300 hover:bg-gray-200
+}

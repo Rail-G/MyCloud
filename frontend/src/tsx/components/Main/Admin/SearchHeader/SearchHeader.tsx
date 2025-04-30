@@ -9,9 +9,6 @@ export function SearchHeader() {
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (!value.length) {
-            return
-        }
         dispatch(getUsers({page: page, param: value}))
     }
     return (

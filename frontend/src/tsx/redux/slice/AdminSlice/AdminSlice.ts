@@ -43,6 +43,8 @@ const adminSlice = createSlice({
         adminError: (state, action: PayloadAction<string>) => {
             state.loading = false
             state.error = action.payload
+            state.page = 1
+            state.param = ''
         },
         getUserItems: (state, _action: PayloadAction<number | null>) => {
             state.loading = true;
@@ -63,6 +65,7 @@ const adminSlice = createSlice({
             state.userFiles = [];
             state.userFolders = [];
             state.currentUser = null;
+            state.currentFolders = [];
         },
         logoutUserAdmin: (state) => {
             state.users = [];

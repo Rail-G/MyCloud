@@ -56,7 +56,7 @@ export function CreateFile({setAddFile}: AddFileType) {
                         </div>
                         <div>
                             <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >Комментарий</label>
-                            <input onChange={onChangeInput} className='tool-input' value={comment} name="comment" type="text" id="tool-name" placeholder='Введите комментарий' />
+                            <input onChange={onChangeInput} className='tool-input' value={comment} name="comment" type="text" id="tool-name" maxLength={50} placeholder='Введите комментарий' />
                         </div>
                         <div>
                             <button type='submit' disabled={Math.floor(file ? file.size: 0) > 100 * 1024 ** 2} className={Math.floor(file ? file.size: 0) > 100 * 1024 ** 2 ? 'tool-not-submit-btn' : 'tool-submit-btn'}>

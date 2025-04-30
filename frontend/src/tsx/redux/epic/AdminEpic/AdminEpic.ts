@@ -16,7 +16,7 @@ export const adminGetEpic: Epic<RootAction, RootAction, RootState> = (action$) =
             withCredentials: true
         }).pipe(
             map((responseData) => adminSuccess(responseData.response.results as AdminUser[])),
-            catchError((error) => of(adminError(error.response)))
+            catchError(() => of(adminError('Больше нет других пользователей')))
         )
     )
 )

@@ -9,7 +9,7 @@ from folderApp.models import UsersFolders
 
 def customDir(instance, filename):
     renamed_file_name, new_file_path = renamer(instance.user, filename, instance.folder)
-    instance.file_name = renamed_file_name
+    instance.file_name = '_'.join(renamed_file_name.split())
     instance.extensions = renamed_file_name.split('.')[-1]
     return new_file_path
 
@@ -69,7 +69,6 @@ class UsersFiles(models.Model):
                     self.file_name = self_file_name
                     self.file.name = file_path
                     new_full_file_path = os.path.normpath(os.path.join(settings.MEDIA_ROOT, file_path))
-                    print(old_full_file_path, new_full_file_path)
                     if os.path.exists(new_full_file_path):
                         raise ValidationError(f"Файл с именем '{self_file_name}' уже существует. Пожалуйста, переименуйте файл.")
                     os.rename(old_full_file_path, new_full_file_path)

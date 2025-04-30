@@ -62,7 +62,7 @@ export function Edit({setEdit, file, setInfo}: EditProp) {
                     </div>
                     <div>
                         <label className="text-base font-medium text-(--color-haze) mb-2 block" htmlFor="tool-name" >Комментарий</label>
-                        <input className='tool-input' onChange={onChange} type="text" value={value.comment} name="comment" id="tool-name" placeholder='Введите комментарий' />
+                        <input className='tool-input' onChange={onChange} type="text" value={value.comment} maxLength={50} name="comment" id="tool-name" placeholder='Введите комментарий' />
                     </div>
                     <div>
                         <button type='submit' className='tool-submit-btn'>
