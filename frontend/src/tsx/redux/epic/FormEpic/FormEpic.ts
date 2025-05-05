@@ -46,7 +46,7 @@ export const logoutEpic: Epic<RootAction, RootAction, RootState> = (action$) => 
     ofType(logoutUser.type),
     switchMap(() => 
         ajax({
-            url: `${import.meta.env.VITE_SERVER_URL}/api/user/logout/`,
+            url: `${import.meta.env.VITE_SERVER_URL}api/user/logout/`,
             method: "POST",
             headers: {'Content-Type': 'application/json'},
             withCredentials: true

@@ -66,8 +66,8 @@ class UserLoginView(ModelViewSet):
             login(request, user)
             signal_manager.enable()
             expires = datetime.now() + timedelta(days=365)
-            response.set_cookie(key='a_t', value=token[0].key, httponly=True, secure=True, samesite='None')
-            response.set_cookie(key='csrf', value=csrf, httponly=True, secure=True, samesite='None')
+            response.set_cookie(key='a_t', value=token[0].key, httponly=True)
+            response.set_cookie(key='csrf', value=csrf, httponly=True)
 
             return response
         else:
