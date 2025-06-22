@@ -251,6 +251,7 @@
       server {
          listen 80;
          server_name <ip_адрес_сервера>;
+         client_max_body_size 200M;
 
          location = /favicon.ico {
             access_log off;
